@@ -65,6 +65,7 @@ no se sube a GitHub.
 | `assets/img/hero.jpg`     | Fondo de la portada                          |
 | `assets/img/taller.jpg`   | Fondo de la cita                             |
 | `assets/img/contacto.jpg` | Fondo de la sección de contacto              |
+| `assets/img/restauracion-reloj-*` | Foto de la sección de restauración  |
 | `assets/img/og-image.jpg` | Vista previa al compartir el link (1200×630) |
 
 ## Correo del formulario

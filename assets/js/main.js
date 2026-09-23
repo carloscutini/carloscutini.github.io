@@ -21,6 +21,7 @@ const OBRAS = [
   { img: 'lampara-moton',     titulo: 'Lámpara de motón',        categoria: 'luminarias', precio: 95000 },
   { img: 'faro-recibidor',    titulo: 'Faro de cobre, en casa',  categoria: 'luminarias' },
   { img: 'aplique-barometro', titulo: 'Aplique con barómetro',   categoria: 'luminarias' },
+  { img: 'veleros-mesa',      titulo: 'Veleros de mesa',         categoria: 'maquetas' },
 ];
 // =========================
 
@@ -56,6 +57,10 @@ document.getElementById('filters').addEventListener('click', e => {
   const f = btn.dataset.filter;
   grid.querySelectorAll('.card').forEach(c => c.classList.toggle('hide', f !== 'todos' && c.dataset.cat !== f));
 });
+
+// Restauración: consulta directa por WhatsApp
+document.getElementById('restauracion-wa').href =
+  `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hola Carlos, quería consultarte por la reparación de una pieza antigua.')}`;
 
 // Lightbox
 const lb = document.getElementById('lightbox');

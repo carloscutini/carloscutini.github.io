@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carlos Cutini — Creaciones Náuticas</title>
-  <meta name="description" content="Carlos Cutini, navegante de toda la vida, crea obras náuticas a mano: luminarias, decoración, maquetas y piezas por encargo.">
+  <meta name="description" content="Carlos Cutini, navegante de toda la vida, crea obras náuticas a mano: luminarias, decoración, maquetas y piezas por encargo. También restaura piezas antiguas.">
   <link rel="canonical" href="https://carloscutini.github.io/">
   <meta name="theme-color" content="#c69f7a">
   <meta name="author" content="Carlos Cutini">
@@ -14,7 +14,7 @@
   <meta property="og:locale" content="es_AR">
   <meta property="og:site_name" content="Carlos Cutini — Creaciones Náuticas">
   <meta property="og:title" content="Carlos Cutini — Creaciones Náuticas">
-  <meta property="og:description" content="Obras náuticas hechas a mano: luminarias, decoración, maquetas y piezas por encargo.">
+  <meta property="og:description" content="Obras náuticas hechas a mano: luminarias, decoración, maquetas, piezas por encargo y restauración de piezas antiguas.">
   <meta property="og:url" content="https://carloscutini.github.io/">
   <meta property="og:image" content="https://carloscutini.github.io/assets/img/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -59,6 +59,7 @@
       <a href="#inicio" class="logo" aria-label="Carlos Cutini — inicio"><svg><use href="#logo"/></svg></a>
       <nav class="nav">
         <a href="#obra">Obra</a>
+        <a href="#restauracion">Restauración</a>
         <a href="#contacto">Contacto</a>
         <button class="cart-toggle" id="cart-toggle" aria-label="Abrir carrito">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
@@ -110,6 +111,29 @@
           </div>
         </div>
         <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- Restauración -->
+    <section class="restauracion" id="restauracion">
+      <div class="wrap">
+        <picture class="restauracion-foto reveal">
+          <source type="image/webp" srcset="assets/img/restauracion-reloj-600.webp 600w, assets/img/restauracion-reloj-1200.webp 1200w" sizes="(max-width: 900px) 100vw, 50vw">
+          <img src="assets/img/restauracion-reloj.jpg" alt="Reloj de péndulo antiguo restaurado" loading="lazy" decoding="async">
+        </picture>
+        <div class="restauracion-texto reveal">
+          <p class="eyebrow">Restauración</p>
+          <h2>Piezas con <em>historia.</em></h2>
+          <div class="divider"></div>
+          <p>Además de crear, Carlos repara y restaura objetos antiguos: relojes de péndulo, faroles, lámparas, barómetros e instrumentos de a bordo. Limpia, recupera maderas y bronces, y los devuelve a funcionar respetando su carácter original.</p>
+          <ul class="restauracion-lista">
+            <li>Relojes de pared y de mesa</li>
+            <li>Faroles y lámparas de bronce</li>
+            <li>Barómetros, compases e instrumentos náuticos</li>
+            <li>Muebles y piezas de madera</li>
+          </ul>
+          <a class="btn btn-dark" id="restauracion-wa" href="#contacto" target="_blank" rel="noopener">Consultar una reparación</a>
+        </div>
       </div>
     </section>
 

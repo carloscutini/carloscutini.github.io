@@ -179,6 +179,23 @@ a { color: inherit; text-decoration: none; }
   background: none; border: 0; color: var(--white); font-size: 36px; cursor: pointer; line-height: 1;
 }
 
+/* ---------- Restauración ---------- */
+.restauracion { padding: 0 0 140px; }
+.restauracion .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; align-items: center; }
+.restauracion-foto img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.restauracion .eyebrow { color: var(--brown); margin-bottom: 18px; }
+.restauracion h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(38px, 4.4vw, 52px); line-height: 1.1; }
+.restauracion h2 em { display: block; }
+.restauracion .divider { width: 1px; height: 48px; background: var(--brown); margin: 32px 0; opacity: .6; }
+.restauracion-texto > p:not(.eyebrow) { line-height: 1.7; font-size: 16px; max-width: 480px; }
+.restauracion-lista { list-style: none; margin: 28px 0 40px; border-top: 1px solid rgba(107, 74, 48, .2); max-width: 480px; }
+.restauracion-lista li {
+  padding: 12px 0; border-bottom: 1px solid rgba(107, 74, 48, .2);
+  font-family: var(--serif); font-size: 17px; color: var(--brown);
+}
+.btn-dark { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.btn-dark:hover { background: transparent; color: var(--ink); }
+
 /* ---------- Contacto ---------- */
 .contacto { padding: 140px 0; --bg: url('../img/contacto.jpg'); }
 .contacto .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 110px; }
@@ -361,14 +378,17 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
-  .contacto .wrap { grid-template-columns: 1fr; gap: 60px; }
+  .contacto .wrap, .restauracion .wrap { grid-template-columns: 1fr; gap: 60px; }
   .side-line { display: none; }
 }
 @media (max-width: 640px) {
   .header .wrap, .footer .wrap { padding-inline: 0; }
-  .nav { gap: 22px; }
+  .nav { gap: 16px; }
+  .nav a { letter-spacing: .14em; font-size: 11px; }
   .grid { grid-template-columns: 1fr; }
   .obra, .contacto { padding: 90px 0; }
+  .restauracion { padding-bottom: 90px; }
+  .restauracion .btn { letter-spacing: .16em; padding-inline: 24px; }
   .footer .wrap { flex-direction: column; text-align: center; }
   .cart-row { grid-template-columns: 1fr; gap: 0; }
 }
