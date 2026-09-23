@@ -20,6 +20,7 @@ const OBRAS = [
   { img: 'percheros-veleros', titulo: 'Percheros veleros',       categoria: 'decoracion', precio: 45000 },
   { img: 'lampara-moton',     titulo: 'Lámpara de motón',        categoria: 'luminarias', precio: 95000 },
   { img: 'faro-recibidor',    titulo: 'Faro de cobre, en casa',  categoria: 'luminarias' },
+  { img: 'aplique-barometro', titulo: 'Aplique con barómetro',   categoria: 'luminarias' },
 ];
 // =========================
 
