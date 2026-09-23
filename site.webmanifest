@@ -1,0 +1,12 @@
+{
+  "name": "Carlos Cutini — Creaciones Náuticas",
+  "short_name": "Carlos Cutini",
+  "lang": "es",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#efe4d4",
+  "theme_color": "#c69f7a",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

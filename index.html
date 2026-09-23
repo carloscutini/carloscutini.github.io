@@ -1,1 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carlos Cutini — Creaciones Náuticas</title>
+  <meta name="description" content="Carlos Cutini, navegante de toda la vida, crea obras náuticas a mano: luminarias, decoración, maquetas y piezas por encargo.">
+  <link rel="canonical" href="https://carloscutini.github.io/">
+  <meta name="theme-color" content="#c69f7a">
+  <meta name="author" content="Carlos Cutini">
 
+  <!-- Open Graph / redes sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:site_name" content="Carlos Cutini — Creaciones Náuticas">
+  <meta property="og:title" content="Carlos Cutini — Creaciones Náuticas">
+  <meta property="og:description" content="Obras náuticas hechas a mano: luminarias, decoración, maquetas y piezas por encargo.">
+  <meta property="og:url" content="https://carloscutini.github.io/">
+  <meta property="og:image" content="https://carloscutini.github.io/assets/img/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Íconos -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Carlos Cutini",
+    "jobTitle": "Artesano náutico",
+    "url": "https://carloscutini.github.io/",
+    "sameAs": ["https://instagram.com/carlos.cutini"]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Logo reutilizable -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="ancla" viewBox="0 0 64 64">
+      <rect x="1" y="1" width="62" height="62" fill="none" stroke="currentColor" stroke-width="2"/>
+      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="32" cy="15" r="4"/>
+        <path d="M32 19v31M24 26h16M16 38c2 8 9 12 16 12s14-4 16-12"/>
+        <path d="M13 41l3-4 4 3M51 41l-3-4-4 3"/>
+      </g>
+    </symbol>
+  </svg>
+
+  <header class="header" id="header">
+    <div class="wrap">
+      <a href="#inicio" class="logo" aria-label="Carlos Cutini — inicio"><svg><use href="#ancla"/></svg></a>
+      <nav class="nav">
+        <a href="#obra">Obra</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero tinted" id="inicio">
+      <span class="side-line"></span>
+      <div>
+        <svg class="hero-mark reveal"><use href="#ancla"/></svg>
+        <p class="eyebrow reveal">Carlos Cutini</p>
+        <h1 class="reveal">Creaciones <em>Náuticas</em></h1>
+        <div class="divider"></div>
+        <p class="reveal">Navegante de toda la vida, hoy dedica su tiempo a la creación de obras náuticas utilizando distintos materiales.</p>
+        <div class="actions reveal">
+          <a href="#obra" class="btn btn-ghost">Ver obras</a>
+          <a href="#contacto" class="btn btn-solid">Encargar obra</a>
+        </div>
+      </div>
+      <a class="handle" href="https://instagram.com/carlos.cutini" target="_blank" rel="noopener">@carlos.cutini</a>
+    </section>
+
+    <!-- Cita -->
+    <section class="quote tinted">
+      <span class="side-line"></span>
+      <blockquote class="reveal">"El mar no se aprende en los libros. Se aprende en las manos."</blockquote>
+      <cite class="reveal">— CARLOS CUTINI</cite>
+    </section>
+
+    <!-- Obra -->
+    <section class="obra" id="obra">
+      <div class="wrap">
+        <div class="obra-head">
+          <div class="reveal">
+            <p class="eyebrow">Obra</p>
+            <h2>Creaciones selectas</h2>
+          </div>
+          <div class="filters reveal" id="filters">
+            <button class="active" data-filter="todos">Todos</button>
+            <button data-filter="luminarias">Luminarias</button>
+            <button data-filter="decoracion">Decoración</button>
+            <button data-filter="maquetas">Maquetas</button>
+            <button data-filter="taller">Taller</button>
+          </div>
+        </div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="contacto tinted" id="contacto">
+      <div class="wrap">
+        <div class="reveal">
+          <p class="eyebrow">Contacto</p>
+          <h2>Encarga <em>tu obra.</em></h2>
+          <div class="divider"></div>
+          <p class="intro">Carlos trabaja por encargo. Cada pieza parte de una conversación sobre el espacio, el uso y los materiales. Escribile para conocer disponibilidad y plazos.</p>
+          <div class="ig">
+            <span class="eyebrow">Instagram</span>
+            <a href="https://instagram.com/carlos.cutini" target="_blank" rel="noopener">@carlos.cutini</a>
+          </div>
+        </div>
+
+        <form class="form reveal" id="form">
+          <div class="field">
+            <label class="eyebrow" for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" placeholder="Su nombre" required>
+          </div>
+          <div class="field">
+            <label class="eyebrow" for="email">Correo electrónico</label>
+            <input id="email" name="email" type="email" placeholder="su@correo.com" required>
+          </div>
+          <div class="field">
+            <label class="eyebrow" for="mensaje">Descripción de la pieza</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Cuénteme qué tiene en mente — tipo de pieza, espacio donde irá, materiales preferidos…" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-solid">Enviar consulta</button>
+          <p class="form-note" id="form-note" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <a href="#inicio" class="logo" aria-label="Volver arriba"><svg><use href="#ancla"/></svg></a>
+      <small>© <span id="year"></span> Carlos Cutini — Creaciones Náuticas</small>
+      <a class="eyebrow" href="https://instagram.com/carlos.cutini" target="_blank" rel="noopener">@carlos.cutini</a>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button aria-label="Cerrar">&times;</button>
+    <img alt="">
+    <p></p>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
