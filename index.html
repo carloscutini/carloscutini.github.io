@@ -21,6 +21,8 @@
 
   <!-- Íconos -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,19 +45,18 @@
 
   <!-- Logo reutilizable -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="ancla" viewBox="0 0 64 64">
-      <rect x="1" y="1" width="62" height="62" fill="none" stroke="currentColor" stroke-width="2"/>
-      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-        <circle cx="32" cy="15" r="4"/>
-        <path d="M32 19v31M24 26h16M16 38c2 8 9 12 16 12s14-4 16-12"/>
-        <path d="M13 41l3-4 4 3M51 41l-3-4-4 3"/>
+    <symbol id="logo" viewBox="302 301 480 480">
+      <g fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M412 440C430 462 470 475 505 455C540 435 548 385 538 350C528 318 490 310 455 322C400 340 355 400 345 450C335 510 375 572 440 582C520 594 595 560 620 490"/>
+        <path d="M626 320L622 470C621 520 632 549 662 550L690 550Q703 550 703 564L704 762"/>
+        <path d="M632 414L740 410M587 683L692 683"/>
       </g>
     </symbol>
   </svg>
 
   <header class="header" id="header">
     <div class="wrap">
-      <a href="#inicio" class="logo" aria-label="Carlos Cutini — inicio"><svg><use href="#ancla"/></svg></a>
+      <a href="#inicio" class="logo" aria-label="Carlos Cutini — inicio"><svg><use href="#logo"/></svg></a>
       <nav class="nav">
         <a href="#obra">Obra</a>
         <a href="#contacto">Contacto</a>
@@ -68,7 +69,7 @@
     <section class="hero tinted" id="inicio">
       <span class="side-line"></span>
       <div>
-        <svg class="hero-mark reveal"><use href="#ancla"/></svg>
+        <svg class="hero-mark reveal"><use href="#logo"/></svg>
         <p class="eyebrow reveal">Carlos Cutini</p>
         <h1 class="reveal">Creaciones <em>Náuticas</em></h1>
         <div class="divider"></div>
@@ -144,7 +145,7 @@
 
   <footer class="footer">
     <div class="wrap">
-      <a href="#inicio" class="logo" aria-label="Volver arriba"><svg><use href="#ancla"/></svg></a>
+      <a href="#inicio" class="logo" aria-label="Volver arriba"><svg><use href="#logo"/></svg></a>
       <small>© <span id="year"></span> Carlos Cutini — Creaciones Náuticas</small>
       <a class="eyebrow" href="https://instagram.com/carlos.cutini" target="_blank" rel="noopener">@carlos.cutini</a>
     </div>
