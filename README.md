@@ -11,9 +11,8 @@ index.html            Página principal
 assets/css/styles.css Estilos
 assets/js/main.js     Galería, filtros, formulario
 assets/img/           Fotos optimizadas (WebP + JPEG)
+assets/icons/         Logo, favicon e íconos para celular (+ site.webmanifest)
 scripts/              Script para optimizar fotos
-favicon.svg           Ícono del sitio
-site.webmanifest      Datos para instalar el sitio en el celular
 robots.txt            Indicaciones para buscadores
 sitemap.xml           Mapa del sitio para buscadores
 ```
