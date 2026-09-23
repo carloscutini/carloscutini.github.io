@@ -60,6 +60,10 @@
       <nav class="nav">
         <a href="#obra">Obra</a>
         <a href="#contacto">Contacto</a>
+        <button class="cart-toggle" id="cart-toggle" aria-label="Abrir carrito">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="cart-count" id="cart-count" hidden>0</span>
+        </button>
       </nav>
     </div>
   </header>
@@ -156,6 +160,82 @@
     <img alt="">
     <p></p>
   </div>
+
+  <!-- Carrito -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart" id="cart" aria-label="Carrito" inert>
+    <div class="cart-head">
+      <h2>Tu carrito</h2>
+      <button class="cart-close" id="cart-close" aria-label="Cerrar carrito">&times;</button>
+    </div>
+    <div class="cart-body">
+      <ul class="cart-items" id="cart-items"></ul>
+      <p class="cart-empty" id="cart-empty">Tu carrito está vacío.</p>
+      <details class="cart-datos" id="cart-datos" open>
+        <summary>Datos para la entrega</summary>
+        <form id="cart-form" novalidate>
+          <div class="cart-field">
+            <label class="eyebrow" for="c-nombre">Nombre</label>
+            <input id="c-nombre" name="nombre" type="text" placeholder="Tu nombre" autocomplete="name">
+          </div>
+          <div class="cart-row">
+            <div class="cart-field">
+              <label class="eyebrow" for="c-telefono">Teléfono</label>
+              <input id="c-telefono" name="telefono" type="tel" placeholder="11 5555…" autocomplete="tel">
+            </div>
+            <div class="cart-field">
+              <label class="eyebrow" for="c-email">Email</label>
+              <input id="c-email" name="email" type="email" placeholder="opcional" autocomplete="email">
+            </div>
+          </div>
+          <div class="cart-field">
+            <label class="eyebrow" for="c-entrega">Cómo lo recibís</label>
+            <select id="c-entrega" name="entrega">
+              <option value="">Elegí una opción…</option>
+              <option value="retiro">Retiro en el taller</option>
+              <option value="envio">Envío a domicilio</option>
+            </select>
+          </div>
+          <div class="cart-field" id="c-direccion-field" hidden>
+            <label class="eyebrow" for="c-direccion">Dirección y localidad</label>
+            <input id="c-direccion" name="direccion" type="text" placeholder="Calle, número, localidad" autocomplete="street-address">
+          </div>
+        </form>
+      </details>
+    </div>
+    <div class="cart-foot" id="cart-foot">
+      <div class="cart-total"><span>Total</span><strong id="cart-total"></strong></div>
+      <div class="cart-total cart-total-desc" id="cart-desc-row"><span id="cart-desc-label"></span><strong id="cart-total-desc"></strong></div>
+      <p class="cart-aviso" id="cart-aviso"></p>
+      <button class="cart-btn cart-btn-wa" data-pago="whatsapp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.5-.3Z"/></svg>
+        Finalizar por WhatsApp
+      </button>
+      <button class="cart-btn cart-btn-tr" data-pago="transferencia">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-3-3M20 16H5l3 3"/></svg>
+        <span id="cart-tr-label">Transferencia</span>
+      </button>
+      <p class="cart-note" id="cart-note">Coordinamos envío y pago por WhatsApp</p>
+    </div>
+  </aside>
+
+  <!-- Pago por transferencia -->
+  <dialog class="transfer" id="transfer" aria-labelledby="tr-titulo">
+    <div class="transfer-box">
+      <button class="tr-close" type="button" aria-label="Cerrar">&times;</button>
+      <h2 id="tr-titulo">Transferencia</h2>
+      <p id="tr-intro">Transferí el total de tu pedido (<strong id="tr-monto"></strong>) a esta cuenta:</p>
+      <p class="tr-desc" id="tr-desc"></p>
+      <div class="tr-datos" id="tr-datos"></div>
+      <p class="tr-sin-datos" id="tr-sin-datos">Escribinos por WhatsApp y te pasamos los datos para transferir.</p>
+      <p class="tr-pedido">N° de pedido: <span id="tr-pedido"></span></p>
+      <p class="tr-nota">Una vez que hagas la transferencia, envianos el <strong>comprobante de pago por WhatsApp</strong> para confirmar tu pedido.</p>
+      <button class="cart-btn cart-btn-wa" type="button" id="tr-enviar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.5-.3Z"/></svg>
+        <span id="tr-enviar-label">Enviar comprobante por WhatsApp</span>
+      </button>
+    </div>
+  </dialog>
 
   <script src="assets/js/main.js"></script>
 </body>

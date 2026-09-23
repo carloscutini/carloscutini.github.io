@@ -9,7 +9,7 @@ Sitio web de Carlos Cutini, publicado con GitHub Pages en
 index.html            Página principal
 404.html              Página de error
 assets/css/styles.css Estilos
-assets/js/main.js     Galería, filtros, formulario
+assets/js/main.js     Galería, filtros, carrito, formulario
 assets/img/           Fotos optimizadas (WebP + JPEG)
 assets/icons/         Logo, favicon e íconos para celular (+ site.webmanifest)
 scripts/              Script para optimizar fotos
@@ -36,6 +36,24 @@ sitemap.xml           Mapa del sitio para buscadores
 
    Categorías: `luminarias`, `decoracion`, `maquetas`, `taller`. Los filtros
    sin obras se ocultan solos.
+
+   Para venderla, sumale `precio` (en pesos, sin puntos):
+
+   ```js
+   { img: 'farol-nuevo', titulo: 'Farol nuevo', categoria: 'luminarias', precio: 120000 },
+   ```
+
+   Las obras sin precio se muestran igual, pero sin el botón "Agregar".
+
+## Carrito
+
+Los visitantes agregan obras al carrito, completan sus datos y cierran el pedido
+por WhatsApp de dos formas: **pago a coordinar** o **transferencia con descuento**.
+Se configura al principio de `assets/js/main.js`:
+
+- `WHATSAPP`: número que recibe los pedidos (ej. `5491155551234`).
+- `DESCUENTO_TRANSFERENCIA`: % de descuento por transferencia (`0` para no ofrecerlo).
+- `TRANSFERENCIA`: alias, CBU y titular que se incluyen en el pedido por transferencia.
 
 Las fotos originales pueden guardarse en `assets/img/originales/`: esa carpeta
 no se sube a GitHub.
