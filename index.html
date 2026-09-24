@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Decoración náutica artesanal y restauración | Carlos Cutini</title>
-  <meta name="description" content="Decoración náutica hecha a mano: faros y lámparas de cobre y latón, veleros y piezas por encargo. Restauración de relojes, faroles y barómetros antiguos.">
+  <meta name="description" content="Decoración náutica hecha a mano en Béccar, San Isidro: faros y lámparas de cobre y latón, veleros y piezas por encargo. Restauración de relojes y antigüedades.">
   <link rel="canonical" href="https://carloscutini.com.ar/">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#c69f7a">
@@ -69,7 +69,17 @@
         "logo": "https://carloscutini.com.ar/assets/icons/icon-512.png",
         "image": "https://carloscutini.com.ar/assets/img/og-image.jpg",
         "founder": { "@id": "https://carloscutini.com.ar/#carlos" },
-        "areaServed": { "@type": "Country", "name": "Argentina" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Béccar",
+          "addressRegion": "Buenos Aires",
+          "addressCountry": "AR"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "San Isidro" },
+          { "@type": "AdministrativeArea", "name": "Zona Norte, Gran Buenos Aires" },
+          { "@type": "Country", "name": "Argentina" }
+        ],
         "sameAs": ["https://instagram.com/carlos.cutini"],
         "contactPoint": {
           "@type": "ContactPoint",
@@ -218,6 +228,7 @@
           <h2>Encarga <em>tu obra.</em></h2>
           <div class="divider"></div>
           <p class="intro">Carlos trabaja por encargo. Cada pieza parte de una conversación sobre el espacio, el uso y los materiales. Escribile para conocer disponibilidad y plazos.</p>
+          <p class="intro">El taller está en Béccar, San Isidro (zona norte de Buenos Aires). También coordina envíos.</p>
           <div class="ig">
             <span class="eyebrow">Instagram</span>
             <a href="https://instagram.com/carlos.cutini" target="_blank" rel="noopener">@carlos.cutini</a>
@@ -291,7 +302,7 @@
             <label class="eyebrow" for="c-entrega">Cómo lo recibís</label>
             <select id="c-entrega" name="entrega">
               <option value="">Elegí una opción…</option>
-              <option value="retiro">Retiro en el taller</option>
+              <option value="retiro">Retiro en el taller (Béccar)</option>
               <option value="envio">Envío a domicilio</option>
             </select>
           </div>

@@ -302,7 +302,7 @@ function enviarPedido(transferencia, pedido) {
   lineas.push('', `Nombre: ${f.nombre.value.trim()}`);
   if (f.telefono.value.trim()) lineas.push(`Teléfono: ${f.telefono.value.trim()}`);
   if (f.email.value.trim()) lineas.push(`Email: ${f.email.value.trim()}`);
-  lineas.push(f.entrega.value === 'envio' ? `Envío a: ${f.direccion.value.trim()}` : 'Retiro en el taller');
+  lineas.push(f.entrega.value === 'envio' ? `Envío a: ${f.direccion.value.trim()}` : 'Retiro en el taller (Béccar)');
   if (transferencia) {
     lineas.push('', hayDatosBancarios()
       ? 'Ya hice la transferencia, te adjunto el comprobante.'
