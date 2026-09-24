@@ -1,7 +1,4 @@
 // ===== CONFIGURACIÓN =====
-// Correo donde llegan las consultas del formulario.
-const EMAIL_CONTACTO = 'carlos@ejemplo.com';
-
 // WhatsApp donde llegan los pedidos del carrito: código de país + número, sin "+" ni espacios.
 const WHATSAPP = '5491168232424';
 
@@ -35,7 +32,7 @@ grid.innerHTML = OBRAS.map(o => `
   <figure class="card reveal" data-cat="${o.categoria}" data-full="${FOTOS}${o.img}-1200.webp">
     <picture>
       <source type="image/webp" srcset="${FOTOS}${o.img}-600.webp 1x, ${FOTOS}${o.img}-1200.webp 2x">
-      <img src="${FOTOS}${o.img}.jpg" alt="${o.titulo}" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
+      <img src="${FOTOS}${o.img}.jpg" alt="${o.titulo}, obra náutica hecha a mano por Carlos Cutini" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
     </picture>
     <figcaption>
       <span>${NOMBRES[o.categoria]}</span><strong>${o.titulo}</strong>
@@ -43,6 +40,32 @@ grid.innerHTML = OBRAS.map(o => `
     </figcaption>
     ${o.precio ? `<button class="add" data-add="${o.img}" aria-label="Agregar ${o.titulo} al carrito">Agregar</button>` : ''}
   </figure>`).join('');
+
+// Datos para buscadores: las obras con precio se publican como productos (Google Shopping / resultados enriquecidos)
+const SITIO = 'https://carloscutini.com.ar/';
+const ld = document.createElement('script');
+ld.type = 'application/ld+json';
+ld.textContent = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': OBRAS.filter(o => o.precio).map(o => ({
+    '@type': 'Product',
+    name: o.titulo,
+    description: `${o.titulo}. Pieza náutica hecha a mano por Carlos Cutini.`,
+    image: [`${SITIO}${FOTOS}${o.img}.jpg`, `${SITIO}${FOTOS}${o.img}-1200.webp`],
+    category: NOMBRES[o.categoria],
+    brand: { '@id': `${SITIO}#marca` },
+    offers: {
+      '@type': 'Offer',
+      url: `${SITIO}#obra`,
+      price: o.precio,
+      priceCurrency: 'ARS',
+      availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+      seller: { '@id': `${SITIO}#marca` },
+    },
+  })),
+});
+document.head.appendChild(ld);
 
 // Ocultar filtros de categorías que todavía no tienen obras
 document.querySelectorAll('#filters button[data-filter]').forEach(b => {
@@ -104,7 +127,8 @@ grid.addEventListener('click', e => {
   if (!card) return;
   const img = card.querySelector('img');
   lb.querySelector('img').src = card.dataset.full;
-  lb.querySelector('p').textContent = img.alt;
+  lb.querySelector('img').alt = img.alt;
+  lb.querySelector('p').textContent = card.querySelector('strong').textContent;
   lb.classList.add('open');
 });
 const cerrar = () => lb.classList.remove('open');
@@ -126,14 +150,24 @@ const io = new IntersectionObserver(entries => entries.forEach(en => {
 }), { threshold: .15 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// Formulario: abre el cliente de correo con la consulta
-document.getElementById('form').addEventListener('submit', e => {
+// Formulario: envía la consulta a Formspree sin salir de la página
+document.getElementById('form').addEventListener('submit', async e => {
   e.preventDefault();
   const f = e.target;
-  const asunto = `Consulta de obra — ${f.nombre.value}`;
-  const cuerpo = `Nombre: ${f.nombre.value}\nCorreo: ${f.email.value}\n\n${f.mensaje.value}`;
-  window.location.href = `mailto:${EMAIL_CONTACTO}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
-  document.getElementById('form-note').textContent = '¡Gracias! Se abrió tu correo para enviar la consulta.';
+  const nota = document.getElementById('form-note');
+  const boton = f.querySelector('button[type="submit"]');
+  boton.disabled = true;
+  nota.textContent = 'Enviando…';
+  try {
+    const res = await fetch(f.action, { method: 'POST', body: new FormData(f), headers: { Accept: 'application/json' } });
+    if (!res.ok) throw new Error(res.status);
+    f.reset();
+    nota.textContent = '¡Gracias! Recibí tu consulta y te respondo a la brevedad.';
+  } catch {
+    nota.textContent = 'No se pudo enviar la consulta. Probá de nuevo o escribime por WhatsApp o Instagram.';
+  } finally {
+    boton.disabled = false;
+  }
 });
 
 // ===== Carrito =====

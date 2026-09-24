@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://carloscutini.github.io/sitemap.xml
+Sitemap: https://carloscutini.com.ar/sitemap.xml

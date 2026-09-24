@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carlos Cutini — Creaciones Náuticas</title>
-  <meta name="description" content="Carlos Cutini, navegante de toda la vida, crea obras náuticas a mano: luminarias, decoración, maquetas y piezas por encargo. También restaura piezas antiguas.">
-  <link rel="canonical" href="https://carloscutini.github.io/">
+  <title>Decoración náutica artesanal y restauración | Carlos Cutini</title>
+  <meta name="description" content="Decoración náutica hecha a mano: faros y lámparas de cobre y latón, veleros y piezas por encargo. Restauración de relojes, faroles y barómetros antiguos.">
+  <link rel="canonical" href="https://carloscutini.com.ar/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#c69f7a">
   <meta name="author" content="Carlos Cutini">
 
@@ -14,10 +15,17 @@
   <meta property="og:locale" content="es_AR">
   <meta property="og:site_name" content="Carlos Cutini — Creaciones Náuticas">
   <meta property="og:title" content="Carlos Cutini — Creaciones Náuticas">
-  <meta property="og:description" content="Obras náuticas hechas a mano: luminarias, decoración, maquetas, piezas por encargo y restauración de piezas antiguas.">
-  <meta property="og:url" content="https://carloscutini.github.io/">
-  <meta property="og:image" content="https://carloscutini.github.io/assets/img/og-image.jpg">
+  <meta property="og:description" content="Decoración náutica hecha a mano: luminarias, veleros, piezas por encargo y restauración de antigüedades.">
+  <meta property="og:url" content="https://carloscutini.com.ar/">
+  <meta property="og:image" content="https://carloscutini.com.ar/assets/img/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Carlos Cutini — Creaciones Náuticas">
   <meta name="twitter:card" content="summary_large_image">
+
+  <!-- La portada es la imagen más grande de la primera pantalla: que empiece a bajar cuanto antes -->
+  <link rel="preload" as="image" href="assets/img/hero.jpg" fetchpriority="high">
 
   <!-- Íconos -->
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
@@ -33,11 +41,62 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Carlos Cutini",
-    "jobTitle": "Artesano náutico",
-    "url": "https://carloscutini.github.io/",
-    "sameAs": ["https://instagram.com/carlos.cutini"]
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://carloscutini.com.ar/#sitio",
+        "url": "https://carloscutini.com.ar/",
+        "name": "Carlos Cutini — Creaciones Náuticas",
+        "inLanguage": "es-AR",
+        "publisher": { "@id": "https://carloscutini.com.ar/#marca" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://carloscutini.com.ar/#carlos",
+        "name": "Carlos Cutini",
+        "jobTitle": "Artesano náutico",
+        "description": "Navegante de toda la vida, crea obras náuticas a mano y restaura objetos antiguos.",
+        "url": "https://carloscutini.com.ar/",
+        "image": "https://carloscutini.com.ar/assets/img/og-image.jpg",
+        "knowsAbout": ["Decoración náutica", "Luminarias de cobre y latón", "Maquetas de veleros", "Restauración de relojes antiguos", "Restauración de instrumentos náuticos"],
+        "sameAs": ["https://instagram.com/carlos.cutini"]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://carloscutini.com.ar/#marca",
+        "name": "Carlos Cutini — Creaciones Náuticas",
+        "url": "https://carloscutini.com.ar/",
+        "logo": "https://carloscutini.com.ar/assets/icons/icon-512.png",
+        "image": "https://carloscutini.com.ar/assets/img/og-image.jpg",
+        "founder": { "@id": "https://carloscutini.com.ar/#carlos" },
+        "areaServed": { "@type": "Country", "name": "Argentina" },
+        "sameAs": ["https://instagram.com/carlos.cutini"],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+54 9 11 6823-2424",
+          "availableLanguage": "es"
+        },
+        "makesOffer": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Obras náuticas por encargo",
+              "description": "Luminarias, decoración y maquetas náuticas hechas a mano a pedido."
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Restauración de antigüedades",
+              "description": "Reparación y restauración de relojes de pared y de mesa, faroles y lámparas de bronce, barómetros, compases, instrumentos náuticos y muebles de madera."
+            }
+          }
+        ]
+      }
+    ]
   }
   </script>
 </head>
@@ -165,7 +224,9 @@
           </div>
         </div>
 
-        <form class="form reveal" id="form">
+        <form class="form reveal" id="form" action="https://formspree.io/f/mbglkkar" method="POST">
+          <input type="hidden" name="_subject" value="Consulta desde carloscutini.com.ar">
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
           <div class="field">
             <label class="eyebrow" for="nombre">Nombre</label>
             <input id="nombre" name="nombre" type="text" placeholder="Su nombre" required>

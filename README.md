@@ -1,7 +1,7 @@
 # Carlos Cutini — Creaciones Náuticas
 
 Sitio web de Carlos Cutini, publicado con GitHub Pages en
-<https://carloscutini.github.io/>.
+<https://carloscutini.com.ar/> (dominio propio, configurado en `CNAME`).
 
 ## Estructura
 
@@ -15,6 +15,7 @@ assets/icons/         Logo, favicon e íconos para celular (+ site.webmanifest)
 scripts/              Script para optimizar fotos
 robots.txt            Indicaciones para buscadores
 sitemap.xml           Mapa del sitio para buscadores
+llms.txt              Resumen del sitio para asistentes de IA
 ```
 
 ## Cómo agregar una obra
@@ -69,9 +70,12 @@ no se sube a GitHub.
 | `assets/img/reparaciones/restauracion-reloj-antes-*` | Restauración: foto "antes"    |
 | `assets/img/og-image.jpg` | Vista previa al compartir el link (1200×630) |
 
-## Correo del formulario
+## Formulario de contacto
 
-Cambiá `EMAIL_CONTACTO` al principio de `assets/js/main.js`.
+Las consultas se envían con [Formspree](https://formspree.io) y llegan al correo
+de la cuenta. El código del formulario está en el `action` del `<form>` en
+`index.html` (`https://formspree.io/f/<código>`): para cambiarlo, reemplazá lo que
+va después de `/f/`.
 
 ## Ver el sitio en tu computadora
 
