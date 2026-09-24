@@ -181,13 +181,48 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Restauración ---------- */
 .restauracion { padding: 0 0 140px; }
-.restauracion .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; align-items: center; }
-.restauracion-foto img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.restauracion .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 90px; align-items: center; }
+.restauracion-head { grid-column: 1 / -1; }
 .restauracion .eyebrow { color: var(--brown); margin-bottom: 18px; }
 .restauracion h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(38px, 4.4vw, 52px); line-height: 1.1; }
-.restauracion h2 em { display: block; }
-.restauracion .divider { width: 1px; height: 48px; background: var(--brown); margin: 32px 0; opacity: .6; }
-.restauracion-texto > p:not(.eyebrow) { line-height: 1.7; font-size: 16px; max-width: 480px; }
+.restauracion-texto > p { line-height: 1.7; font-size: 16px; max-width: 480px; }
+
+/* Antes / después: la foto "antes" se recorta hasta la barra */
+.antes-despues {
+  position: relative; aspect-ratio: 4 / 5; overflow: hidden;
+  background: #4a3222; cursor: ew-resize; user-select: none; -webkit-user-select: none;
+  touch-action: pan-y;
+}
+.antes-despues picture, .antes-despues img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.antes-despues img { object-fit: cover; pointer-events: none; }
+.ad-antes { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+.ad-antes img { object-position: 50% 28%; }
+.ad-badge {
+  position: absolute; top: 18px; z-index: 2; pointer-events: none;
+  padding: 7px 12px; background: rgba(30, 18, 10, .62); color: var(--white);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+  transition: opacity .25s;
+}
+.ad-badge-antes { left: 18px; }
+.ad-badge-despues { right: 18px; }
+.antes-despues.ad-min .ad-badge-antes, .antes-despues.ad-max .ad-badge-despues { opacity: 0; }
+.ad-barra {
+  position: absolute; top: 0; bottom: 0; left: var(--pos); z-index: 3;
+  width: 2px; margin-left: -1px; background: var(--white);
+  box-shadow: 0 0 12px rgba(20, 12, 6, .35); outline: none;
+}
+.ad-perilla {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 48px; height: 48px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--white); color: var(--ink);
+  box-shadow: 0 4px 16px rgba(20, 12, 6, .3);
+  transition: transform .2s;
+}
+.ad-perilla svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.antes-despues:hover .ad-perilla, .antes-despues.ad-arrastrando .ad-perilla { transform: translate(-50%, -50%) scale(1.08); }
+.ad-barra:focus-visible .ad-perilla { outline: 2px solid var(--ink); outline-offset: 3px; }
 .restauracion-lista { list-style: none; margin: 28px 0 40px; border-top: 1px solid rgba(107, 74, 48, .2); max-width: 480px; }
 .restauracion-lista li {
   padding: 12px 0; border-bottom: 1px solid rgba(107, 74, 48, .2);

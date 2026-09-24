@@ -62,6 +62,39 @@ document.getElementById('filters').addEventListener('click', e => {
 document.getElementById('restauracion-wa').href =
   `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hola Carlos, quería consultarte por la reparación de una pieza antigua.')}`;
 
+// Restauración: comparador antes / después
+(() => {
+  const ad = document.getElementById('antes-despues');
+  const barra = ad.querySelector('.ad-barra');
+  const mover = pct => {
+    pct = Math.min(100, Math.max(0, pct));
+    ad.style.setProperty('--pos', pct + '%');
+    barra.setAttribute('aria-valuenow', Math.round(pct));
+    ad.classList.toggle('ad-min', pct < 12);
+    ad.classList.toggle('ad-max', pct > 88);
+  };
+  const desdePuntero = e => {
+    const r = ad.getBoundingClientRect();
+    mover((e.clientX - r.left) / r.width * 100);
+  };
+  ad.addEventListener('pointerdown', e => {
+    ad.setPointerCapture(e.pointerId);
+    ad.classList.add('ad-arrastrando');
+    desdePuntero(e);
+  });
+  ad.addEventListener('pointermove', e => { if (ad.hasPointerCapture(e.pointerId)) desdePuntero(e); });
+  const soltar = () => ad.classList.remove('ad-arrastrando');
+  ad.addEventListener('pointerup', soltar);
+  ad.addEventListener('pointercancel', soltar);
+  barra.addEventListener('keydown', e => {
+    const actual = parseFloat(barra.getAttribute('aria-valuenow'));
+    const pasos = { ArrowLeft: -5, ArrowRight: 5, Home: -100, End: 100 };
+    if (!(e.key in pasos)) return;
+    e.preventDefault();
+    mover(actual + pasos[e.key]);
+  });
+})();
+
 // Lightbox
 const lb = document.getElementById('lightbox');
 grid.addEventListener('click', e => {
