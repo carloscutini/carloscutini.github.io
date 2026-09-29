@@ -8,6 +8,20 @@ const DESCUENTO_TRANSFERENCIA = 10;
 // Datos bancarios que se incluyen en el pedido por transferencia (dejá '' lo que no quieras mostrar).
 const TRANSFERENCIA = { alias: '', cbu: 'xxxxxxxxxxxxxxxxxxxxxx', titular: 'Carlos Cutini' };
 
+// Fotos que pasan en el fondo de la portada: 1200x900, en assets/img/hero/ (se preparan con scripts/foto-hero.sh).
+// Si cambiás la primera, cambiala también en index.html (hero-fotos y el preload del <head>).
+const HERO_FOTOS = [
+  'hero/lampara-barco-mesa-de-luz.jpg',       // Íntimo
+  'hero/reloj-timon-rosa-de-los-vientos.jpg', // Horas de timón
+  'hero/lampara-moton.jpg',                   // Mi Ambiente
+  'hero/par-veleros-de-madera.jpg',           // Simpáticos
+  'hero/porta-llaves-casco-de-barco.jpg',     // Esenciales Premium
+  'hero/aplique-reloj-ojo-de-buey.jpg',
+  'hero/aplique-barometro.jpg',
+];
+// Segundos que se ve cada foto.
+const HERO_SEGUNDOS = 6;
+
 // Dólar blue: los precios en USD se pasan a pesos con el promedio compra/venta del día (dolarapi.com).
 // Si no se puede consultar, se usa la última cotización guardada en el navegador o, si no hay, esta.
 const DOLAR_RESPALDO = 1550;
@@ -22,6 +36,7 @@ const REDONDEO = 1000;
 // medidas: se muestran junto al tipo. Opcional.
 // usd: precio en dólares; se muestra en pesos al dólar blue del día.
 // precio: precio fijo en pesos, sin puntos (solo si no tiene usd).
+// consultar: true muestra "Precio a consultar" y un botón que abre WhatsApp (para obras sin usd ni precio).
 // Sin usd ni precio, la obra se muestra pero no se puede agregar al carrito.
 const OBRAS = [
   { img: 'faro-cobre',                      titulo: 'Mi Guía',            tipo: 'Faro de cobre y latón',              medidas: '45 cm',      categoria: 'luminarias', usd: 150 },
@@ -29,16 +44,13 @@ const OBRAS = [
   { img: 'maqueta-velero-velas-azules',     titulo: 'Pistero',            tipo: 'Velero grande, velas azules',        medidas: '60 × 90 cm', categoria: 'maquetas',   usd: 250 },
   { img: 'lampara-barco-mesa-de-luz',       titulo: 'Íntimo',             tipo: 'Velador velero con luz',             medidas: '20 × 20 cm', categoria: 'luminarias', usd: 120 },
   { img: 'reloj-timon-rosa-de-los-vientos', titulo: 'Horas de timón',     tipo: 'Reloj octogonal con rueda de timón', medidas: '20 × 20 cm', categoria: 'decoracion', usd: 60 },
-  { img: 'lampara-moton',                   titulo: 'Mi Ambiente',        tipo: 'Lámpara de motón',                   medidas: '75 × 30 cm', categoria: 'luminarias', precio: 95000 },
+  { img: 'lampara-moton',                   titulo: 'Mi Ambiente',        tipo: 'Lámpara de motón',                   medidas: '75 × 30 cm', categoria: 'luminarias', consultar: true },
   { img: 'aplique-boya-roja',               titulo: 'Baliza',             tipo: 'Aplique boya roja y blanca',                                categoria: 'luminarias', usd: 70 },
   { img: 'par-veleros-de-madera',           titulo: 'Simpáticos',         tipo: 'Veleros chicos de mesa',             medidas: '15 × 25 cm', categoria: 'maquetas',   usd: 25 },
   { img: 'porta-llaves-velero',             titulo: 'Esenciales',         tipo: 'Porta llaves velero',                medidas: '20 × 10 cm', categoria: 'decoracion', usd: 15 },
   { img: 'porta-llaves-casco-de-barco',     titulo: 'Esenciales Premium', tipo: 'Porta llaves perfil 3D',             medidas: '20 × 16 cm', categoria: 'decoracion', usd: 30 },
-  { img: 'faro-recibidor',                  titulo: 'Mi Guía',            tipo: 'Faro de cobre y latón',              medidas: '45 cm',      categoria: 'luminarias', usd: 150 },
-  { img: 'veleros-mesa',                    titulo: 'Simpáticos',         tipo: 'Veleros chicos de mesa',             medidas: '15 × 25 cm', categoria: 'maquetas',   usd: 25 },
-  { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',                                                         categoria: 'luminarias' },
-  { img: 'aplique-barometro',               titulo: 'Aplique con barómetro',                                                                 categoria: 'luminarias' },
-  { img: 'percheros-veleros',               titulo: 'Percheros veleros',                                                                     categoria: 'decoracion' },
+  { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',                                                         categoria: 'luminarias', consultar: true },
+  { img: 'aplique-barometro',               titulo: 'Aplique con barómetro',                                                                 categoria: 'luminarias', consultar: true },
 ];
 // =========================
 
@@ -69,8 +81,10 @@ grid.innerHTML = OBRAS.map(o => `
       ${detalle(o) ? `<small class="obra-detalle">${detalle(o)}</small>` : ''}
       ${o.precio ? `<em class="precio" data-precio="${o.img}">${pesos(o.precio)}</em>` : ''}
       ${o.usd ? `<small class="precio-usd">USD ${o.usd.toLocaleString('es-AR')}</small>` : ''}
+      ${!o.precio && o.consultar ? '<em class="precio">Precio a consultar</em>' : ''}
     </figcaption>
     ${o.precio ? `<button class="add" data-add="${o.img}" aria-label="Agregar ${o.titulo} al carrito">Agregar</button>` : ''}
+    ${!o.precio && o.consultar ? `<a class="add" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola Carlos! Quería consultar el precio de: ${o.titulo}${o.tipo ? ` (${o.tipo})` : ''}`)}" target="_blank" rel="noopener" aria-label="Consultar precio de ${o.titulo} por WhatsApp">Consultar</a>` : ''}
   </figure>`).join('');
 
 // Datos para buscadores: las obras con precio se publican como productos (Google Shopping / resultados enriquecidos)
@@ -155,6 +169,7 @@ const lb = document.getElementById('lightbox');
 grid.addEventListener('click', e => {
   const add = e.target.closest('[data-add]');
   if (add) { agregar(add.dataset.add); return; }
+  if (e.target.closest('a')) return;
   const card = e.target.closest('.card');
   if (!card) return;
   const img = card.querySelector('img');
@@ -169,6 +184,34 @@ document.addEventListener('keydown', e => {
   if (e.key !== 'Escape' || document.getElementById('transfer').open) return;
   cerrar(); cerrarCarrito();
 });
+
+// Portada: pase de fotos. Cada foto se descarga antes de mostrarse; sin animaciones si el visitante las desactivó.
+(() => {
+  const cont = document.getElementById('hero-fotos');
+  if (HERO_FOTOS.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let actual = cont.firstElementChild;
+  let i = 0;
+  const siguiente = () => {
+    const n = (i + 1) % HERO_FOTOS.length;
+    const img = new Image();
+    img.onload = () => {
+      i = n;
+      const nueva = document.createElement('div');
+      nueva.style.backgroundImage = `url('${FOTOS}${HERO_FOTOS[n]}')`;
+      cont.appendChild(nueva);
+      const vieja = actual;
+      nueva.offsetWidth; // fuerza a pintarla transparente antes, para que el fundido se anime
+      nueva.classList.add('activa');
+      vieja.classList.replace('activa', 'saliendo');
+      setTimeout(() => vieja.remove(), 2000);
+      actual = nueva;
+      setTimeout(siguiente, HERO_SEGUNDOS * 1000);
+    };
+    img.onerror = () => { i = n; setTimeout(siguiente, HERO_SEGUNDOS * 1000); };
+    img.src = FOTOS + HERO_FOTOS[n];
+  };
+  setTimeout(siguiente, HERO_SEGUNDOS * 1000);
+})();
 
 // Header al hacer scroll
 const header = document.getElementById('header');

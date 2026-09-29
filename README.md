@@ -72,12 +72,24 @@ no se sube a GitHub.
 
 | Archivo                   | Uso                                          |
 |---------------------------|----------------------------------------------|
-| `assets/img/hero.jpg`     | Fondo de la portada                          |
-| `assets/img/taller.jpg`   | Fondo de la cita                             |
+| `assets/img/hero/`        | Pase de fotos de la portada (1200×900, ver abajo) |
 | `assets/img/contacto.jpg` | Fondo de la sección de contacto              |
 | `assets/img/reparaciones/restauracion-reloj-*`       | Restauración: foto "después"  |
 | `assets/img/reparaciones/restauracion-reloj-antes-*` | Restauración: foto "antes"    |
 | `assets/img/og-image.jpg` | Vista previa al compartir el link (1200×630) |
+
+## Fotos de la portada
+
+Las fotos que pasan en el fondo de la portada están en `assets/img/hero/`, todas
+de 1200×900. Para sumar una:
+
+```sh
+scripts/foto-hero.sh assets/img/farol-nuevo.jpg farol-nuevo 20
+```
+
+El último número indica desde qué altura se recorta la foto si es vertical
+(0 = arriba, 50 = centro). Después sumá `'hero/farol-nuevo.jpg'` a `HERO_FOTOS`
+en `assets/js/main.js`.
 
 ## Formulario de contacto
 
