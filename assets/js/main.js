@@ -17,31 +17,36 @@ const REDONDEO = 1000;
 // Obras: optimizá la foto con scripts/optimizar-foto.sh y sumá una línea por pieza.
 // img: nombre usado en el script (sin extensión)
 // categoria: luminarias | decoracion | maquetas | taller
+// titulo: nombre de la obra en la web
+// tipo: qué es la pieza (se muestra debajo del nombre y lo leen los buscadores). Opcional.
+// medidas: se muestran junto al tipo. Opcional.
 // usd: precio en dólares; se muestra en pesos al dólar blue del día.
 // precio: precio fijo en pesos, sin puntos (solo si no tiene usd).
 // Sin usd ni precio, la obra se muestra pero no se puede agregar al carrito.
 const OBRAS = [
-  { img: 'faro-cobre',        titulo: 'Faro de cobre y latón',   categoria: 'luminarias', precio: 180000 },
-  { img: 'percheros-veleros', titulo: 'Percheros veleros',       categoria: 'decoracion', precio: 45000 },
-  { img: 'lampara-moton',     titulo: 'Lámpara de motón',        categoria: 'luminarias', precio: 95000 },
-  { img: 'faro-recibidor',    titulo: 'Faro de cobre, en casa',  categoria: 'luminarias' },
-  { img: 'aplique-barometro', titulo: 'Aplique con barómetro',   categoria: 'luminarias' },
-  { img: 'veleros-mesa',      titulo: 'Veleros de mesa',         categoria: 'maquetas' },
-  { img: 'reloj-timon-rosa-de-los-vientos', titulo: 'Reloj timón con rosa de los vientos', categoria: 'decoracion' },
-  { img: 'maqueta-velero-casco-verde',      titulo: 'Maqueta de velero, casco verde',      categoria: 'maquetas' },
-  { img: 'lampara-barco-mesa-de-luz',       titulo: 'Lámpara barco de mesa de luz',        categoria: 'luminarias' },
-  { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',       categoria: 'luminarias' },
-  { img: 'aplique-boya-roja',               titulo: 'Aplique boya roja',                   categoria: 'luminarias' },
-  { img: 'maqueta-velero-velas-azules',     titulo: 'Maqueta de velero, velas azules',     categoria: 'maquetas' },
-  { img: 'porta-llaves-velero',             titulo: 'Porta llaves velero',                 categoria: 'decoracion' },
-  { img: 'porta-llaves-casco-de-barco',     titulo: 'Porta llaves casco de barco',         categoria: 'decoracion' },
-  { img: 'par-veleros-de-madera',           titulo: 'Par de veleros de madera',            categoria: 'maquetas' },
+  { img: 'faro-cobre',                      titulo: 'Mi Guía',            tipo: 'Faro de cobre y latón',              medidas: '45 cm',      categoria: 'luminarias', usd: 150 },
+  { img: 'maqueta-velero-casco-verde',      titulo: 'Crucero cómodo',     tipo: 'Velero grande, casco verde',         medidas: '60 × 90 cm', categoria: 'maquetas',   usd: 250 },
+  { img: 'maqueta-velero-velas-azules',     titulo: 'Pistero',            tipo: 'Velero grande, velas azules',        medidas: '60 × 90 cm', categoria: 'maquetas',   usd: 250 },
+  { img: 'lampara-barco-mesa-de-luz',       titulo: 'Íntimo',             tipo: 'Velador velero con luz',             medidas: '20 × 20 cm', categoria: 'luminarias', usd: 120 },
+  { img: 'reloj-timon-rosa-de-los-vientos', titulo: 'Horas de timón',     tipo: 'Reloj octogonal con rueda de timón', medidas: '20 × 20 cm', categoria: 'decoracion', usd: 60 },
+  { img: 'lampara-moton',                   titulo: 'Mi Ambiente',        tipo: 'Lámpara de motón',                   medidas: '75 × 30 cm', categoria: 'luminarias', precio: 95000 },
+  { img: 'aplique-boya-roja',               titulo: 'Baliza',             tipo: 'Aplique boya roja y blanca',                                categoria: 'luminarias', usd: 70 },
+  { img: 'par-veleros-de-madera',           titulo: 'Simpáticos',         tipo: 'Veleros chicos de mesa',             medidas: '15 × 25 cm', categoria: 'maquetas',   usd: 25 },
+  { img: 'porta-llaves-velero',             titulo: 'Esenciales',         tipo: 'Porta llaves velero',                medidas: '20 × 10 cm', categoria: 'decoracion', usd: 15 },
+  { img: 'porta-llaves-casco-de-barco',     titulo: 'Esenciales Premium', tipo: 'Porta llaves perfil 3D',             medidas: '20 × 16 cm', categoria: 'decoracion', usd: 30 },
+  { img: 'faro-recibidor',                  titulo: 'Mi Guía',            tipo: 'Faro de cobre y latón',              medidas: '45 cm',      categoria: 'luminarias', usd: 150 },
+  { img: 'veleros-mesa',                    titulo: 'Simpáticos',         tipo: 'Veleros chicos de mesa',             medidas: '15 × 25 cm', categoria: 'maquetas',   usd: 25 },
+  { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',                                                         categoria: 'luminarias' },
+  { img: 'aplique-barometro',               titulo: 'Aplique con barómetro',                                                                 categoria: 'luminarias' },
+  { img: 'percheros-veleros',               titulo: 'Percheros veleros',                                                                     categoria: 'decoracion' },
 ];
 // =========================
 
 const NOMBRES = { luminarias: 'Luminarias', decoracion: 'Decoración', maquetas: 'Maquetas', taller: 'Taller' };
 const FOTOS = 'assets/img/';
 const pesos = n => '$' + Math.round(n).toLocaleString('es-AR');
+// "Velero grande, casco verde · 60 × 90 cm"
+const detalle = o => [o.tipo, o.medidas].filter(Boolean).join(' · ');
 
 // Cotización: arranca con la última guardada (o la de respaldo) y se actualiza con la del día
 let dolar = { valor: DOLAR_RESPALDO, fecha: null };
@@ -57,10 +62,11 @@ grid.innerHTML = OBRAS.map(o => `
   <figure class="card reveal" data-cat="${o.categoria}" data-full="${FOTOS}${o.img}-1200.webp">
     <picture>
       <source type="image/webp" srcset="${FOTOS}${o.img}-600.webp 1x, ${FOTOS}${o.img}-1200.webp 2x">
-      <img src="${FOTOS}${o.img}.jpg" alt="${o.titulo}, obra náutica hecha a mano por Carlos Cutini" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
+      <img src="${FOTOS}${o.img}.jpg" alt="${o.tipo ? `${o.tipo} «${o.titulo}»` : o.titulo}, obra náutica hecha a mano por Carlos Cutini" loading="lazy" decoding="async" onerror="this.style.visibility='hidden'">
     </picture>
     <figcaption>
       <span>${NOMBRES[o.categoria]}</span><strong>${o.titulo}</strong>
+      ${detalle(o) ? `<small class="obra-detalle">${detalle(o)}</small>` : ''}
       ${o.precio ? `<em class="precio" data-precio="${o.img}">${pesos(o.precio)}</em>` : ''}
       ${o.usd ? `<small class="precio-usd">USD ${o.usd.toLocaleString('es-AR')}</small>` : ''}
     </figcaption>
@@ -75,8 +81,8 @@ ld.textContent = JSON.stringify({
   '@context': 'https://schema.org',
   '@graph': OBRAS.filter(o => o.precio).map(o => ({
     '@type': 'Product',
-    name: o.titulo,
-    description: `${o.titulo}. Pieza náutica hecha a mano por Carlos Cutini.`,
+    name: o.tipo ? `${o.titulo} — ${o.tipo}` : o.titulo,
+    description: `${o.tipo || o.titulo}${o.medidas ? ` de ${o.medidas}` : ''}. Pieza náutica hecha a mano por Carlos Cutini.`,
     image: [`${SITIO}${FOTOS}${o.img}.jpg`, `${SITIO}${FOTOS}${o.img}-1200.webp`],
     category: NOMBRES[o.categoria],
     brand: { '@id': `${SITIO}#marca` },
@@ -241,6 +247,7 @@ function pintar() {
       <img src="${FOTOS}${o.img}-600.webp" alt="" onerror="this.src='${FOTOS}${o.img}.jpg'">
       <div>
         <strong>${o.titulo}</strong>
+        ${detalle(o) ? `<small class="cart-detalle">${detalle(o)}</small>` : ''}
         <div class="qty">
           <button data-menos="${o.img}" aria-label="Quitar uno">−</button>
           <span>${i.cant}</span>
@@ -320,7 +327,7 @@ function enviarPedido(transferencia, pedido) {
     '',
     ...carrito.map(i => {
       const o = obra(i.img);
-      return `• ${o.titulo} x${i.cant} — ${pesos(o.precio * i.cant)}` + (o.usd ? ` (USD ${(o.usd * i.cant).toLocaleString('es-AR')})` : '');
+      return `• ${o.titulo}${detalle(o) ? ` (${detalle(o)})` : ''} x${i.cant} — ${pesos(o.precio * i.cant)}` + (o.usd ? ` (USD ${(o.usd * i.cant).toLocaleString('es-AR')})` : '');
     }),
     '',
     `Total: ${pesos(total())}`,

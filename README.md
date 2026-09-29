@@ -41,8 +41,11 @@ llms.txt              Resumen del sitio para asistentes de IA
    Para venderla, sumale `usd` (precio en dólares):
 
    ```js
-   { img: 'farol-nuevo', titulo: 'Farol nuevo', categoria: 'luminarias', usd: 150 },
+   { img: 'farol-nuevo', titulo: 'Mi Farol', tipo: 'Farol de latón', medidas: '30 cm', categoria: 'luminarias', usd: 150 },
    ```
+
+   `tipo` y `medidas` son opcionales: se muestran debajo del nombre, en el
+   carrito y en el pedido de WhatsApp, y los usan los buscadores.
 
    La web lo muestra en pesos al dólar blue del día (promedio compra/venta,
    consultado en [dolarapi.com](https://dolarapi.com)), redondeado hacia arriba
