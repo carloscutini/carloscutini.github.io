@@ -38,11 +38,17 @@ llms.txt              Resumen del sitio para asistentes de IA
    Categorías: `luminarias`, `decoracion`, `maquetas`, `taller`. Los filtros
    sin obras se ocultan solos.
 
-   Para venderla, sumale `precio` (en pesos, sin puntos):
+   Para venderla, sumale `usd` (precio en dólares):
 
    ```js
-   { img: 'farol-nuevo', titulo: 'Farol nuevo', categoria: 'luminarias', precio: 120000 },
+   { img: 'farol-nuevo', titulo: 'Farol nuevo', categoria: 'luminarias', usd: 150 },
    ```
+
+   La web lo muestra en pesos al dólar blue del día (promedio compra/venta,
+   consultado en [dolarapi.com](https://dolarapi.com)), redondeado hacia arriba
+   a los $1.000, con el valor en dólares más chico debajo. Si la consulta falla,
+   usa la última cotización guardada o `DOLAR_RESPALDO`. Para un precio fijo en
+   pesos, usá `precio` en lugar de `usd`.
 
    Las obras sin precio se muestran igual, pero sin el botón "Agregar".
 

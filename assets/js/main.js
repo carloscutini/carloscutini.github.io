@@ -8,10 +8,18 @@ const DESCUENTO_TRANSFERENCIA = 10;
 // Datos bancarios que se incluyen en el pedido por transferencia (dejá '' lo que no quieras mostrar).
 const TRANSFERENCIA = { alias: '', cbu: 'xxxxxxxxxxxxxxxxxxxxxx', titular: 'Carlos Cutini' };
 
+// Dólar blue: los precios en USD se pasan a pesos con el promedio compra/venta del día (dolarapi.com).
+// Si no se puede consultar, se usa la última cotización guardada en el navegador o, si no hay, esta.
+const DOLAR_RESPALDO = 1550;
+// Los pesos se redondean hacia arriba a este múltiplo.
+const REDONDEO = 1000;
+
 // Obras: optimizá la foto con scripts/optimizar-foto.sh y sumá una línea por pieza.
 // img: nombre usado en el script (sin extensión)
 // categoria: luminarias | decoracion | maquetas | taller
-// precio: en pesos, sin puntos. Sin precio, la obra se muestra pero no se puede agregar al carrito.
+// usd: precio en dólares; se muestra en pesos al dólar blue del día.
+// precio: precio fijo en pesos, sin puntos (solo si no tiene usd).
+// Sin usd ni precio, la obra se muestra pero no se puede agregar al carrito.
 const OBRAS = [
   { img: 'faro-cobre',        titulo: 'Faro de cobre y latón',   categoria: 'luminarias', precio: 180000 },
   { img: 'percheros-veleros', titulo: 'Percheros veleros',       categoria: 'decoracion', precio: 45000 },
@@ -22,12 +30,23 @@ const OBRAS = [
   { img: 'reloj-timon-rosa-de-los-vientos', titulo: 'Reloj timón con rosa de los vientos', categoria: 'decoracion' },
   { img: 'maqueta-velero-casco-verde',      titulo: 'Maqueta de velero, casco verde',      categoria: 'maquetas' },
   { img: 'lampara-barco-mesa-de-luz',       titulo: 'Lámpara barco de mesa de luz',        categoria: 'luminarias' },
+  { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',       categoria: 'luminarias' },
+  { img: 'aplique-boya-roja',               titulo: 'Aplique boya roja',                   categoria: 'luminarias' },
+  { img: 'maqueta-velero-velas-azules',     titulo: 'Maqueta de velero, velas azules',     categoria: 'maquetas' },
 ];
 // =========================
 
 const NOMBRES = { luminarias: 'Luminarias', decoracion: 'Decoración', maquetas: 'Maquetas', taller: 'Taller' };
 const FOTOS = 'assets/img/';
 const pesos = n => '$' + Math.round(n).toLocaleString('es-AR');
+
+// Cotización: arranca con la última guardada (o la de respaldo) y se actualiza con la del día
+let dolar = { valor: DOLAR_RESPALDO, fecha: null };
+try { dolar = JSON.parse(localStorage.getItem('dolar')) || dolar; } catch {}
+function aplicarCotizacion() {
+  OBRAS.forEach(o => { if (o.usd) o.precio = Math.ceil(o.usd * dolar.valor / REDONDEO) * REDONDEO; });
+}
+aplicarCotizacion();
 
 // Galería
 const grid = document.getElementById('grid');
@@ -39,7 +58,8 @@ grid.innerHTML = OBRAS.map(o => `
     </picture>
     <figcaption>
       <span>${NOMBRES[o.categoria]}</span><strong>${o.titulo}</strong>
-      ${o.precio ? `<em class="precio">${pesos(o.precio)}</em>` : ''}
+      ${o.precio ? `<em class="precio" data-precio="${o.img}">${pesos(o.precio)}</em>` : ''}
+      ${o.usd ? `<small class="precio-usd">USD ${o.usd.toLocaleString('es-AR')}</small>` : ''}
     </figcaption>
     ${o.precio ? `<button class="add" data-add="${o.img}" aria-label="Agregar ${o.titulo} al carrito">Agregar</button>` : ''}
   </figure>`).join('');
@@ -60,8 +80,8 @@ ld.textContent = JSON.stringify({
     offers: {
       '@type': 'Offer',
       url: `${SITIO}#obra`,
-      price: o.precio,
-      priceCurrency: 'ARS',
+      price: o.usd || o.precio,
+      priceCurrency: o.usd ? 'USD' : 'ARS',
       availability: 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: { '@id': `${SITIO}#marca` },
@@ -239,6 +259,8 @@ function pintar() {
   $('cart-desc-label').textContent = `Por transferencia (−${DESCUENTO_TRANSFERENCIA}%)`;
   $('cart-total-desc').textContent = pesos(conDescuento(total()));
   $('cart-tr-label').textContent = DESCUENTO_TRANSFERENCIA ? `Transferencia −${DESCUENTO_TRANSFERENCIA}%` : 'Transferencia';
+  $('cart-dolar').hidden = !carrito.some(i => obra(i.img).usd);
+  $('cart-dolar').textContent = `Precios en pesos al dólar blue${dolar.fecha ? ' del ' + dolar.fecha : ''} (${pesos(dolar.valor)}).`;
 }
 
 function abrirCarrito() {
@@ -293,10 +315,14 @@ function enviarPedido(transferencia, pedido) {
     'Hola Carlos! Quiero hacer este pedido:',
     ...(pedido ? [`N° de pedido: ${pedido}`] : []),
     '',
-    ...carrito.map(i => `• ${obra(i.img).titulo} x${i.cant} — ${pesos(obra(i.img).precio * i.cant)}`),
+    ...carrito.map(i => {
+      const o = obra(i.img);
+      return `• ${o.titulo} x${i.cant} — ${pesos(o.precio * i.cant)}` + (o.usd ? ` (USD ${(o.usd * i.cant).toLocaleString('es-AR')})` : '');
+    }),
     '',
     `Total: ${pesos(total())}`,
   ];
+  if (carrito.some(i => obra(i.img).usd)) lineas.push(`Dólar blue: ${pesos(dolar.valor)}${dolar.fecha ? ' (' + dolar.fecha + ')' : ''}`);
   if (transferencia) {
     lineas.push(DESCUENTO_TRANSFERENCIA
       ? `Pago por transferencia (−${DESCUENTO_TRANSFERENCIA}%): ${pesos(conDescuento(total()))}`
@@ -363,5 +389,20 @@ transfer.addEventListener('click', e => {
 
 pintar();
 actualizarBotones();
+
+// Dólar blue del día: recalcula los precios en la galería y en el carrito
+fetch('https://dolarapi.com/v1/dolares/blue')
+  .then(r => r.ok ? r.json() : Promise.reject(r.status))
+  .then(d => {
+    dolar = {
+      valor: (d.compra + d.venta) / 2,
+      fecha: new Date(d.fechaActualizacion).toLocaleDateString('es-AR', { day: 'numeric', month: 'numeric' }),
+    };
+    try { localStorage.setItem('dolar', JSON.stringify(dolar)); } catch {}
+    aplicarCotizacion();
+    grid.querySelectorAll('[data-precio]').forEach(el => { el.textContent = pesos(obra(el.dataset.precio).precio); });
+    pintar();
+  })
+  .catch(() => {});
 
 document.getElementById('year').textContent = new Date().getFullYear();
