@@ -33,6 +33,8 @@ const OBRAS = [
   { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',       categoria: 'luminarias' },
   { img: 'aplique-boya-roja',               titulo: 'Aplique boya roja',                   categoria: 'luminarias' },
   { img: 'maqueta-velero-velas-azules',     titulo: 'Maqueta de velero, velas azules',     categoria: 'maquetas' },
+  { img: 'porta-llaves-velero',             titulo: 'Porta llaves velero',                 categoria: 'decoracion' },
+  { img: 'porta-llaves-casco-de-barco',     titulo: 'Porta llaves casco de barco',         categoria: 'decoracion' },
 ];
 // =========================
 
