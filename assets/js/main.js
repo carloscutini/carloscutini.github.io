@@ -19,6 +19,9 @@ const OBRAS = [
   { img: 'faro-recibidor',    titulo: 'Faro de cobre, en casa',  categoria: 'luminarias' },
   { img: 'aplique-barometro', titulo: 'Aplique con barómetro',   categoria: 'luminarias' },
   { img: 'veleros-mesa',      titulo: 'Veleros de mesa',         categoria: 'maquetas' },
+  { img: 'reloj-timon-rosa-de-los-vientos', titulo: 'Reloj timón con rosa de los vientos', categoria: 'decoracion' },
+  { img: 'maqueta-velero-casco-verde',      titulo: 'Maqueta de velero, casco verde',      categoria: 'maquetas' },
+  { img: 'lampara-barco-mesa-de-luz',       titulo: 'Lámpara barco de mesa de luz',        categoria: 'luminarias' },
 ];
 // =========================
 
