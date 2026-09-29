@@ -46,7 +46,7 @@ const OBRAS = [
   { img: 'reloj-timon-rosa-de-los-vientos', titulo: 'Horas de timón',     tipo: 'Reloj octogonal con rueda de timón', medidas: '20 × 20 cm', categoria: 'decoracion', usd: 60 },
   { img: 'lampara-moton',                   titulo: 'Mi Ambiente',        tipo: 'Lámpara de motón',                   medidas: '75 × 30 cm', categoria: 'luminarias', consultar: true },
   { img: 'aplique-boya-roja',               titulo: 'Baliza',             tipo: 'Aplique boya roja y blanca',                                categoria: 'luminarias', usd: 70 },
-  { img: 'par-veleros-de-madera',           titulo: 'Simpáticos',         tipo: 'Veleros chicos de mesa',             medidas: '15 × 25 cm', categoria: 'maquetas',   usd: 25 },
+  { img: 'par-veleros-de-madera',           titulo: 'Simpáticos',         tipo: 'Velero chico de mesa, precio por unidad', medidas: '15 × 25 cm', categoria: 'maquetas',   usd: 25 },
   { img: 'porta-llaves-velero',             titulo: 'Esenciales',         tipo: 'Porta llaves velero',                medidas: '20 × 10 cm', categoria: 'decoracion', usd: 15 },
   { img: 'porta-llaves-casco-de-barco',     titulo: 'Esenciales Premium', tipo: 'Porta llaves perfil 3D',             medidas: '20 × 16 cm', categoria: 'decoracion', usd: 30 },
   { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',                                                         categoria: 'luminarias', consultar: true },
