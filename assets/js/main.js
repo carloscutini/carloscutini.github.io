@@ -35,6 +35,7 @@ const OBRAS = [
   { img: 'maqueta-velero-velas-azules',     titulo: 'Maqueta de velero, velas azules',     categoria: 'maquetas' },
   { img: 'porta-llaves-velero',             titulo: 'Porta llaves velero',                 categoria: 'decoracion' },
   { img: 'porta-llaves-casco-de-barco',     titulo: 'Porta llaves casco de barco',         categoria: 'decoracion' },
+  { img: 'par-veleros-de-madera',           titulo: 'Par de veleros de madera',            categoria: 'maquetas' },
 ];
 // =========================
 
