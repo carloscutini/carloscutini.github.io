@@ -34,6 +34,14 @@
       width: 100%; padding: 11px 12px; border: 1px solid var(--linea); background: var(--white); border-radius: 0;
     }
     input:focus, select:focus { outline: 2px solid var(--tan); outline-offset: 1px; }
+    .ver-clave { position: relative; display: block; }
+    .ver-clave input { padding-right: 48px; }
+    .ver-clave button {
+      position: absolute; top: 0; right: 0; bottom: 0; width: 46px;
+      display: grid; place-items: center; background: none; border: 0; color: var(--brown);
+    }
+    .ver-clave button:hover { color: var(--ink); }
+    .ver-clave svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .campo { margin-bottom: 16px; }
     .ayuda { font-size: 13px; color: var(--brown); margin-top: 6px; line-height: 1.45; }
     .error { color: var(--rojo); font-size: 14px; min-height: 1.4em; margin-top: 10px; }
@@ -273,6 +281,27 @@
   let ordenOriginal = null; // lista antes de mover obras, mientras no se guarde el orden
   let filtro = '';
   const fotosLocales = {}; // fotos recién subidas, que GitHub Pages todavía no publicó
+
+  // ---------- Ojito para ver la contraseña ----------
+  const OJO = '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>';
+  const OJO_TACHADO = OJO + '<path d="M4 4l16 16"/>';
+  document.querySelectorAll('input[type=password]').forEach(input => {
+    const caja = document.createElement('span');
+    caja.className = 'ver-clave';
+    input.replaceWith(caja);
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.setAttribute('aria-label', 'Mostrar contraseña');
+    boton.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${OJO}</svg>`;
+    boton.addEventListener('click', () => {
+      const ver = input.type === 'password';
+      input.type = ver ? 'text' : 'password';
+      boton.setAttribute('aria-label', ver ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      boton.firstChild.innerHTML = ver ? OJO_TACHADO : OJO;
+      input.focus();
+    });
+    caja.append(input, boton);
+  });
 
   // ---------- Utilidades ----------
   const b64 = bytes => btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
@@ -619,12 +648,13 @@
     $('panel').hidden = true;
     $('ingreso').hidden = false;
     $('i-clave').value = '';
+    $('i-clave').type = 'password';
   }
   $('salir').addEventListener('click', salir);
 
   $('ingreso').addEventListener('submit', async e => {
     e.preventDefault();
-    const boton = e.target.querySelector('button');
+    const boton = e.target.querySelector('button[type=submit]');
     boton.disabled = true;
     $('i-error').textContent = '';
     try {
@@ -640,7 +670,7 @@
 
   $('config').addEventListener('submit', async e => {
     e.preventDefault();
-    const boton = e.target.querySelector('button');
+    const boton = e.target.querySelector('button[type=submit]');
     const tok = $('c-token').value.trim();
     boton.disabled = true;
     $('c-error').textContent = 'Comprobando el token…';
