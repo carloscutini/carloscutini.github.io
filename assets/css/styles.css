@@ -301,6 +301,12 @@ a { color: inherit; text-decoration: none; }
 .card figcaption .precio { display: block; margin-top: 8px; font-style: normal; font-size: 15px; letter-spacing: .06em; color: var(--gold); }
 .card figcaption .obra-detalle { display: block; margin-top: 4px; font-size: 13px; opacity: .85; }
 .card figcaption .precio-usd { display: block; margin-top: 2px; font-size: 12px; letter-spacing: .06em; opacity: .75; }
+.card figcaption .estado {
+  display: inline-block; margin-top: 10px; padding: 5px 10px;
+  font-style: normal; font-size: 11px; letter-spacing: .24em; text-transform: uppercase;
+  border: 1px solid var(--gold); color: var(--gold);
+}
+.card figcaption .estado-vendido { border-color: var(--white); color: var(--white); background: rgba(30, 18, 10, .45); }
 .card:has(.add) figcaption { right: 150px; }
 .nav { align-items: center; }
 .card .add {

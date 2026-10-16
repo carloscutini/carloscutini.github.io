@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel de obras | Carlos Cutini</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Raleway:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --tan: #c69f7a; --cream: #efe4d4; --ink: #2a1c12; --brown: #6b4a30; --white: #fffaf3;
+      --linea: rgba(107, 74, 48, .2); --verde: #3f6b3a; --ambar: #a86a12; --rojo: #9b2c1f;
+      --serif: 'Lora', Georgia, serif; --sans: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body { font-family: var(--sans); font-size: 16px; color: var(--ink); background: var(--cream); min-height: 100vh; }
+    [hidden] { display: none !important; }
+    h1, h2 { font-family: var(--serif); font-weight: 400; }
+    button, input, select { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .5; cursor: wait; }
+
+    .btn { padding: 11px 18px; border: 1px solid var(--ink); background: transparent; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+    .btn-solid { background: var(--ink); color: var(--white); }
+    .btn-peligro { border-color: var(--rojo); color: var(--rojo); }
+    .btn:hover:not(:disabled) { background: var(--ink); color: var(--white); }
+    .btn-peligro:hover:not(:disabled) { background: var(--rojo); border-color: var(--rojo); }
+
+    label { display: block; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--brown); margin-bottom: 6px; }
+    input[type=text], input[type=password], input[type=number], select {
+      width: 100%; padding: 11px 12px; border: 1px solid var(--linea); background: var(--white); border-radius: 0;
+    }
+    input:focus, select:focus { outline: 2px solid var(--tan); outline-offset: 1px; }
+    .campo { margin-bottom: 16px; }
+    .ayuda { font-size: 13px; color: var(--brown); margin-top: 6px; line-height: 1.45; }
+    .error { color: var(--rojo); font-size: 14px; min-height: 1.4em; margin-top: 10px; }
+
+    /* Ingreso y configuración */
+    .caja { width: min(400px, 100% - 32px); margin: 12vh auto 40px; background: var(--white); padding: 36px 28px; border: 1px solid var(--linea); }
+    .caja .logo { display: block; width: 48px; margin: 0 auto 18px; }
+    .caja h1 { text-align: center; font-size: 26px; margin-bottom: 6px; }
+    .caja .sub { text-align: center; color: var(--brown); font-size: 14px; margin-bottom: 26px; line-height: 1.5; }
+    .caja .btn { width: 100%; margin-top: 6px; }
+    .caja ol { font-size: 14px; line-height: 1.5; padding-left: 20px; margin-bottom: 22px; color: var(--brown); }
+    .caja a { color: var(--ink); }
+
+    /* Panel */
+    .barra { position: sticky; top: 0; z-index: 5; background: var(--tan); color: var(--white); }
+    .barra .wrap { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+    .barra h1 { font-size: 20px; flex: 1; }
+    .barra a, .barra button { color: var(--white); background: none; border: 1px solid rgba(255,250,243,.7); padding: 7px 12px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+    .wrap { width: min(860px, 100% - 32px); margin-inline: auto; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin: 24px 0 16px; }
+    .filtros { display: flex; flex-wrap: wrap; gap: 6px; }
+    .filtros button { padding: 7px 12px; border: 1px solid var(--linea); background: var(--white); font-size: 13px; }
+    .filtros button.activo { background: var(--ink); border-color: var(--ink); color: var(--white); }
+
+    .lista { list-style: none; padding: 0; display: grid; gap: 8px; margin-bottom: 120px; }
+    .obra { display: grid; grid-template-columns: 76px 1fr auto; gap: 14px; align-items: center; background: var(--white); border: 1px solid var(--linea); padding: 10px; }
+    .obra img { width: 76px; height: 92px; object-fit: cover; background: #d8c6ae; display: block; }
+    .obra-info { min-width: 0; }
+    .obra-info strong { font-family: var(--serif); font-weight: 500; font-size: 18px; display: block; }
+    .obra-info small { display: block; color: var(--brown); font-size: 13px; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .obra-info .precio { color: var(--ink); font-weight: 500; }
+    .obra-lado { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+    .obra-lado select { padding: 7px 8px; font-size: 14px; font-weight: 600; }
+    .obra-lado .btn { padding: 7px 12px; font-size: 12px; }
+    .orden { display: flex; gap: 4px; }
+    .orden button { flex: 1; padding: 4px; border: 1px solid var(--linea); background: none; font-size: 14px; }
+    .e-disponible { color: var(--verde); }
+    .e-reservado { color: var(--ambar); }
+    .e-vendido { color: var(--rojo); }
+
+    .aviso-orden { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 6; display: flex; gap: 10px; align-items: center; background: var(--ink); color: var(--white); padding: 10px 10px 10px 18px; box-shadow: 0 8px 30px rgba(0,0,0,.25); width: max-content; max-width: calc(100% - 32px); }
+    .aviso-orden .btn { border-color: var(--white); color: var(--white); padding: 8px 12px; }
+    .aviso-orden .btn-solid { background: var(--white); color: var(--ink); }
+
+    .toast { position: fixed; left: 50%; top: 70px; transform: translateX(-50%); z-index: 20; background: var(--ink); color: var(--white); padding: 12px 18px; font-size: 14px; max-width: calc(100% - 32px); box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+    .toast.mal { background: var(--rojo); }
+
+    /* Editor */
+    dialog { margin: auto; border: 0; padding: 0; width: min(560px, 100% - 24px); max-height: calc(100% - 24px); background: var(--cream); }
+    dialog::backdrop { background: rgba(30, 18, 10, .55); }
+    .editor { padding: 24px 22px; }
+    .editor h2 { font-size: 24px; margin-bottom: 18px; }
+    .foto { display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; margin-bottom: 18px; }
+    .foto img { width: 110px; height: 134px; object-fit: cover; background: #d8c6ae; display: block; }
+    .foto > div { min-width: 0; }
+    .foto input { font-size: 14px; width: 100%; }
+    .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .opciones { display: flex; flex-wrap: wrap; gap: 6px; }
+    .opciones label { margin: 0; font-weight: 500; font-size: 14px; letter-spacing: 0; color: var(--ink); }
+    .opciones input { position: absolute; opacity: 0; pointer-events: none; }
+    .opciones span { display: block; padding: 9px 12px; border: 1px solid var(--linea); background: var(--white); cursor: pointer; }
+    .opciones input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--white); }
+    .opciones input:focus-visible + span { outline: 2px solid var(--tan); outline-offset: 1px; }
+    .pie-editor { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    .pie-editor .btn-peligro { margin-right: auto; }
+
+    @media (max-width: 560px) {
+      .obra { grid-template-columns: 64px 1fr; }
+      .obra img { width: 64px; height: 78px; }
+      .obra-lado { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+      .obra-lado select { flex: 1; }
+      .dos { grid-template-columns: 1fr; gap: 0; }
+      .barra a { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ingreso -->
+  <form class="caja" id="ingreso" hidden>
+    <img class="logo" src="../assets/icons/favicon.svg" alt="">
+    <h1>Panel de obras</h1>
+    <p class="sub">Carlos Cutini — Creaciones Náuticas</p>
+    <div class="campo">
+      <label for="i-usuario">Usuario</label>
+      <input type="text" id="i-usuario" autocomplete="username" autocapitalize="none" required>
+    </div>
+    <div class="campo">
+      <label for="i-clave">Contraseña</label>
+      <input type="password" id="i-clave" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn-solid" type="submit">Entrar</button>
+    <p class="error" id="i-error" role="alert"></p>
+  </form>
+
+  <!-- Configuración inicial: se hace una sola vez -->
+  <form class="caja" id="config" hidden>
+    <img class="logo" src="../assets/icons/favicon.svg" alt="">
+    <h1>Configurar el panel</h1>
+    <p class="sub">Se hace una sola vez. Después se entra solo con usuario y contraseña.</p>
+    <ol>
+      <li>Creá un token de GitHub con permiso para modificar el repositorio <b>carloscutini.github.io</b>
+        (<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">token fine-grained</a>: solo ese repositorio, permiso <i>Contents: Read and write</i>).</li>
+      <li>Pegalo acá y elegí el usuario y la contraseña para entrar.</li>
+    </ol>
+    <div class="campo">
+      <label for="c-token">Token de GitHub</label>
+      <input type="password" id="c-token" autocomplete="off" required>
+    </div>
+    <div class="campo">
+      <label for="c-usuario">Usuario</label>
+      <input type="text" id="c-usuario" autocomplete="off" autocapitalize="none" value="agustina" required>
+    </div>
+    <div class="campo">
+      <label for="c-clave">Contraseña</label>
+      <input type="password" id="c-clave" autocomplete="new-password" minlength="6" required>
+      <p class="ayuda">El token queda guardado en la web cifrado con esta contraseña: cuanto más larga, más seguro.</p>
+    </div>
+    <button class="btn btn-solid" type="submit">Guardar configuración</button>
+    <p class="error" id="c-error" role="alert"></p>
+  </form>
+
+  <!-- Panel -->
+  <div id="panel" hidden>
+    <header class="barra">
+      <div class="wrap">
+        <h1>Obras</h1>
+        <a href="../#obra" target="_blank" rel="noopener">Ver la web</a>
+        <button type="button" id="salir">Salir</button>
+      </div>
+    </header>
+    <main class="wrap">
+      <div class="acciones">
+        <div class="filtros" id="filtros">
+          <button type="button" class="activo" data-filtro="">Todas</button>
+          <button type="button" data-filtro="disponible">Disponibles</button>
+          <button type="button" data-filtro="reservado">Reservadas</button>
+          <button type="button" data-filtro="vendido">Vendidas</button>
+        </div>
+        <button type="button" class="btn btn-solid" id="nueva">+ Nueva obra</button>
+      </div>
+      <p class="ayuda" id="cargando">Cargando obras…</p>
+      <ul class="lista" id="lista"></ul>
+    </main>
+    <div class="aviso-orden" id="aviso-orden" hidden>
+      <span>Cambiaste el orden</span>
+      <button type="button" class="btn" id="orden-cancelar">Deshacer</button>
+      <button type="button" class="btn btn-solid" id="orden-guardar">Guardar orden</button>
+    </div>
+  </div>
+
+  <dialog id="dialogo">
+    <form class="editor" id="editor" method="dialog">
+      <h2 id="e-titulo-dialogo">Nueva obra</h2>
+      <div class="foto">
+        <img id="e-preview" alt="">
+        <div>
+          <label for="e-foto">Foto</label>
+          <input type="file" id="e-foto" accept="image/*">
+          <p class="ayuda">Una foto vertical se ve mejor. Se achica sola antes de subirla.</p>
+        </div>
+      </div>
+      <div class="campo">
+        <label for="e-nombre">Nombre de la obra</label>
+        <input type="text" id="e-nombre" placeholder="Ej.: Mi Guía" required>
+      </div>
+      <div class="campo">
+        <label for="e-tipo">Qué es (opcional)</label>
+        <input type="text" id="e-tipo" placeholder="Ej.: Faro de cobre y latón">
+      </div>
+      <div class="dos">
+        <div class="campo">
+          <label for="e-medidas">Medidas (opcional)</label>
+          <input type="text" id="e-medidas" placeholder="Ej.: 60 × 90 cm">
+        </div>
+        <div class="campo">
+          <label for="e-categoria">Categoría</label>
+          <select id="e-categoria">
+            <option value="luminarias">Luminarias</option>
+            <option value="decoracion">Decoración</option>
+            <option value="maquetas">Maquetas</option>
+            <option value="taller">Taller</option>
+          </select>
+        </div>
+      </div>
+      <div class="campo">
+        <label>Precio</label>
+        <div class="opciones">
+          <label><input type="radio" name="modo" value="usd" checked><span>En dólares</span></label>
+          <label><input type="radio" name="modo" value="pesos"><span>En pesos</span></label>
+          <label><input type="radio" name="modo" value="consultar"><span>A consultar</span></label>
+          <label><input type="radio" name="modo" value="ninguno"><span>Sin precio</span></label>
+        </div>
+      </div>
+      <div class="campo" id="e-monto-campo">
+        <label for="e-monto" id="e-monto-label">Precio en dólares</label>
+        <input type="number" id="e-monto" min="1" step="1" inputmode="numeric">
+        <p class="ayuda" id="e-monto-ayuda">En la web se muestra en pesos, al dólar blue del día.</p>
+      </div>
+      <div class="campo">
+        <label>Estado</label>
+        <div class="opciones">
+          <label><input type="radio" name="estado" value="disponible" checked><span>Disponible</span></label>
+          <label><input type="radio" name="estado" value="reservado"><span>Reservada</span></label>
+          <label><input type="radio" name="estado" value="vendido"><span>Vendida</span></label>
+        </div>
+      </div>
+      <p class="error" id="e-error" role="alert"></p>
+      <div class="pie-editor">
+        <button type="button" class="btn btn-peligro" id="e-borrar">Eliminar</button>
+        <button type="button" class="btn" id="e-cancelar">Cancelar</button>
+        <button type="submit" class="btn btn-solid" id="e-guardar">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+  // ===== CONFIGURACIÓN =====
+  const OWNER = 'carloscutini';
+  const REPO = 'carloscutini.github.io';
+  const RAMA = 'gh-pages';
+  const DATOS = 'assets/data/obras.json';
+  const FOTOS = 'assets/img/';
+  const ACCESO = 'admin/acceso.json';
+  // =========================
+
+  // Cómo funciona: la web no tiene servidor, así que el panel guarda los cambios directamente en el
+  // repositorio de GitHub con un token. Ese token está en admin/acceso.json cifrado con el usuario y la
+  // contraseña (AES-GCM + PBKDF2): sin la contraseña no sirve. GitHub Pages publica cada cambio en 1 o 2 minutos.
+
+  const $ = id => document.getElementById(id);
+  const enc = new TextEncoder();
+  const ESTADOS = { disponible: 'Disponible', reservado: 'Reservada', vendido: 'Vendida' };
+  const NOMBRES = { luminarias: 'Luminarias', decoracion: 'Decoración', maquetas: 'Maquetas', taller: 'Taller' };
+  let token = null;
+  let obras = [];
+  let ordenOriginal = null; // lista antes de mover obras, mientras no se guarde el orden
+  let filtro = '';
+  const fotosLocales = {}; // fotos recién subidas, que GitHub Pages todavía no publicó
+
+  // ---------- Utilidades ----------
+  const b64 = bytes => btoa(Array.from(bytes, b => String.fromCharCode(b)).join(''));
+  const deB64 = s => Uint8Array.from(atob(s.replace(/\s/g, '')), c => c.charCodeAt(0));
+  const texto = s => s.replace(/[<>"]/g, '').replace(/\s+/g, ' ').trim(); // la web arma el HTML con estos textos
+  const escapar = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const slug = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'obra';
+  const precioTexto = o => o.usd ? `USD ${o.usd.toLocaleString('es-AR')}` : o.precio ? `$${o.precio.toLocaleString('es-AR')}` : o.consultar ? 'A consultar' : 'Sin precio';
+  const miniatura = o => fotosLocales[o.img] || `../${FOTOS}${o.img}-600.webp`;
+
+  function toast(msj, mal = false) {
+    document.querySelector('.toast')?.remove();
+    const t = document.createElement('div');
+    t.className = 'toast' + (mal ? ' mal' : '');
+    t.setAttribute('role', 'status');
+    t.textContent = msj;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), mal ? 7000 : 4000);
+  }
+
+  // ---------- Cifrado del token ----------
+  async function clave(usuario, contrasena, sal, iteraciones) {
+    const base = await crypto.subtle.importKey('raw', enc.encode(usuario.trim().toLowerCase() + '\n' + contrasena), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: sal, iterations: iteraciones, hash: 'SHA-256' },
+      base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+  }
+  async function cifrar(tok, usuario, contrasena) {
+    const sal = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const iteraciones = 600000;
+    const k = await clave(usuario, contrasena, sal, iteraciones);
+    const datos = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, k, enc.encode(tok)));
+    return { iteraciones, sal: b64(sal), iv: b64(iv), datos: b64(datos) };
+  }
+  async function descifrar(acceso, usuario, contrasena) {
+    const k = await clave(usuario, contrasena, deB64(acceso.sal), acceso.iteraciones);
+    const datos = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: deB64(acceso.iv) }, k, deB64(acceso.datos));
+    return new TextDecoder().decode(datos);
+  }
+
+  // ---------- GitHub ----------
+  async function gh(ruta, opciones = {}, tok = token) {
+    const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}${ruta}`, {
+      ...opciones,
+      cache: 'no-store',
+      headers: { Authorization: `Bearer ${tok}`, Accept: 'application/vnd.github+json', ...(opciones.body ? { 'Content-Type': 'application/json' } : {}) },
+      body: opciones.body ? JSON.stringify(opciones.body) : undefined,
+    });
+    if (r.status === 401 && tok === token) { salir(); throw new Error('La sesión de GitHub venció o el token ya no es válido.'); }
+    if (!r.ok) {
+      const e = new Error((await r.json().catch(() => ({}))).message || `Error ${r.status}`);
+      e.status = r.status;
+      throw e;
+    }
+    return r.status === 204 ? null : r.json();
+  }
+  const leerJSON = async (ruta, ref) => JSON.parse(new TextDecoder().decode(deB64((await gh(`/contents/${ruta}?ref=${ref}`)).content)));
+
+  // Formato del archivo de obras: una obra por línea, fácil de leer en GitHub
+  const obrasJSON = lista => '[\n' + lista.map(o => '  ' + JSON.stringify(o)).join(',\n') + '\n]\n';
+
+  // Guarda un cambio en un solo commit: vuelve a leer las obras más recientes, les aplica el cambio
+  // y sube el archivo junto con las fotos nuevas (archivos: [{ ruta, base64 }]) y las que se borran (borrar: [ruta]).
+  async function guardarCambio(mensaje, aplicar, archivos = [], borrar = [], intento = 1) {
+    const ref = await gh(`/git/ref/heads/${RAMA}`);
+    const padre = ref.object.sha;
+    const commit = await gh(`/git/commits/${padre}`);
+    const lista = aplicar(await leerJSON(DATOS, padre));
+
+    let existentes = new Set();
+    if (borrar.length) existentes = new Set((await gh(`/contents/${FOTOS.slice(0, -1)}?ref=${padre}`)).map(f => f.path));
+
+    const blob = async contenido => (await gh('/git/blobs', { method: 'POST', body: { content: contenido, encoding: 'base64' } })).sha;
+    const arbol = [
+      { path: DATOS, mode: '100644', type: 'blob', sha: await blob(b64(enc.encode(obrasJSON(lista)))) },
+      ...await Promise.all(archivos.map(async a => ({ path: a.ruta, mode: '100644', type: 'blob', sha: await blob(a.base64) }))),
+      ...borrar.filter(r => existentes.has(r)).map(r => ({ path: r, mode: '100644', type: 'blob', sha: null })),
+    ];
+    const nuevoArbol = await gh('/git/trees', { method: 'POST', body: { base_tree: commit.tree.sha, tree: arbol } });
+    const nuevo = await gh('/git/commits', { method: 'POST', body: { message: mensaje + '\n\nDesde el panel de obras.', tree: nuevoArbol.sha, parents: [padre] } });
+    try {
+      await gh(`/git/refs/heads/${RAMA}`, { method: 'PATCH', body: { sha: nuevo.sha } });
+    } catch (e) {
+      // Alguien guardó otro cambio en el medio: se reintenta sobre la versión nueva
+      if (e.status === 422 && intento < 3) return guardarCambio(mensaje, aplicar, archivos, borrar, intento + 1);
+      throw e;
+    }
+    obras = lista;
+    pintar();
+  }
+
+  // ---------- Fotos: se achican en el navegador (como scripts/optimizar-foto.sh) ----------
+  async function achicar(bmp, ancho, tipo, calidad) {
+    let fuente = bmp, w = bmp.width, h = bmp.height;
+    // Se achica a la mitad varias veces para que no quede pixelada
+    while (w / 2 >= ancho) {
+      const c = new OffscreenCanvas(Math.round(w / 2), Math.round(h / 2));
+      c.getContext('2d').drawImage(fuente, 0, 0, c.width, c.height);
+      fuente = c; w = c.width; h = c.height;
+    }
+    const esc = Math.min(1, ancho / w);
+    const c = document.createElement('canvas');
+    c.width = Math.round(w * esc); c.height = Math.round(h * esc);
+    const ctx = c.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(fuente, 0, 0, c.width, c.height);
+    // Si el navegador no sabe hacer WebP (Safari viejo), entrega JPEG: los navegadores lo muestran igual
+    const blob = await new Promise(res => c.toBlob(res, tipo, calidad));
+    return b64(new Uint8Array(await blob.arrayBuffer()));
+  }
+  async function prepararFoto(archivo, nombre) {
+    const bmp = await createImageBitmap(archivo); // respeta la orientación de la foto del celular
+    return [
+      { ruta: `${FOTOS}${nombre}-600.webp`, base64: await achicar(bmp, 600, 'image/webp', .78) },
+      { ruta: `${FOTOS}${nombre}-1200.webp`, base64: await achicar(bmp, 1200, 'image/webp', .78) },
+      { ruta: `${FOTOS}${nombre}.jpg`, base64: await achicar(bmp, 1200, 'image/jpeg', .8) },
+    ];
+  }
+  const rutasFoto = img => [`${FOTOS}${img}-600.webp`, `${FOTOS}${img}-1200.webp`, `${FOTOS}${img}.jpg`];
+
+  // ---------- Lista ----------
+  function pintar() {
+    $('cargando').hidden = true;
+    const cuenta = e => obras.filter(o => !e || (o.estado || 'disponible') === e).length;
+    document.querySelectorAll('#filtros button').forEach(b => {
+      b.classList.toggle('activo', b.dataset.filtro === filtro);
+      b.textContent = b.textContent.replace(/ \(\d+\)$/, '') + ` (${cuenta(b.dataset.filtro)})`;
+    });
+    const visibles = obras.filter(o => !filtro || (o.estado || 'disponible') === filtro);
+    $('lista').innerHTML = visibles.length ? visibles.map(o => {
+      const estado = o.estado || 'disponible';
+      const detalle = [NOMBRES[o.categoria], o.tipo, o.medidas].filter(Boolean).join(' · ');
+      return `
+      <li class="obra">
+        <img src="${escapar(miniatura(o))}" alt="" loading="lazy" onerror="this.onerror=null;this.src='../${FOTOS}${escapar(o.img)}.jpg'">
+        <div class="obra-info">
+          <strong>${escapar(o.titulo)}</strong>
+          <small>${escapar(detalle)}</small>
+          <small class="precio">${escapar(precioTexto(o))}</small>
+        </div>
+        <div class="obra-lado">
+          <select class="e-${estado}" data-estado="${escapar(o.img)}" aria-label="Estado de ${escapar(o.titulo)}">
+            ${Object.entries(ESTADOS).map(([v, t]) => `<option value="${v}" ${v === estado ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+          <button type="button" class="btn" data-editar="${escapar(o.img)}">Editar</button>
+          ${filtro ? '' : `<div class="orden">
+            <button type="button" data-subir="${escapar(o.img)}" aria-label="Subir ${escapar(o.titulo)}">↑</button>
+            <button type="button" data-bajar="${escapar(o.img)}" aria-label="Bajar ${escapar(o.titulo)}">↓</button>
+          </div>`}
+        </div>
+      </li>`;
+    }).join('') : '<p class="ayuda">No hay obras acá.</p>';
+    $('aviso-orden').hidden = !ordenOriginal;
+  }
+
+  $('filtros').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    filtro = b.dataset.filtro;
+    pintar();
+  });
+
+  // Cambio rápido de estado desde la lista
+  $('lista').addEventListener('change', async e => {
+    const sel = e.target.closest('[data-estado]');
+    if (!sel) return;
+    const img = sel.dataset.estado, estado = sel.value;
+    const titulo = obras.find(o => o.img === img)?.titulo;
+    sel.disabled = true;
+    try {
+      await guardarCambio(`${titulo}: ${ESTADOS[estado].toLowerCase()}`,
+        lista => lista.map(o => o.img === img ? { ...o, estado } : o));
+      toast(`«${titulo}» quedó ${ESTADOS[estado].toLowerCase()}. En 1 o 2 minutos se ve en la web.`);
+    } catch (err) {
+      toast('No se pudo guardar: ' + err.message, true);
+      pintar();
+    }
+  });
+
+  $('lista').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.editar) return abrirEditor(obras.find(o => o.img === b.dataset.editar));
+    const img = b.dataset.subir || b.dataset.bajar;
+    if (!img) return;
+    const i = obras.findIndex(o => o.img === img), j = i + (b.dataset.subir ? -1 : 1);
+    if (j < 0 || j >= obras.length) return;
+    ordenOriginal ??= obras;
+    obras = [...obras];
+    [obras[i], obras[j]] = [obras[j], obras[i]];
+    pintar();
+    $('lista').querySelector(`[data-${b.dataset.subir ? 'subir' : 'bajar'}="${CSS.escape(img)}"]`)?.focus();
+  });
+
+  $('orden-cancelar').addEventListener('click', () => { obras = ordenOriginal; ordenOriginal = null; pintar(); });
+  $('orden-guardar').addEventListener('click', async e => {
+    const orden = obras.map(o => o.img);
+    e.target.disabled = true;
+    try {
+      ordenOriginal = null;
+      await guardarCambio('Cambiar el orden de las obras', lista => [
+        ...orden.map(img => lista.find(o => o.img === img)).filter(Boolean),
+        ...lista.filter(o => !orden.includes(o.img)),
+      ]);
+      toast('Orden guardado. En 1 o 2 minutos se ve en la web.');
+    } catch (err) {
+      toast('No se pudo guardar el orden: ' + err.message, true);
+    } finally {
+      e.target.disabled = false;
+    }
+  });
+
+  // ---------- Editor ----------
+  const dialogo = $('dialogo'), editor = $('editor');
+  let editando = null; // obra que se está editando (null = nueva)
+  let fotoNueva = null;
+
+  function modoPrecio() {
+    const modo = editor.modo.value;
+    $('e-monto-campo').hidden = modo !== 'usd' && modo !== 'pesos';
+    $('e-monto').required = !$('e-monto-campo').hidden;
+    $('e-monto-label').textContent = modo === 'usd' ? 'Precio en dólares' : 'Precio en pesos';
+    $('e-monto-ayuda').textContent = modo === 'usd' ? 'En la web se muestra en pesos, al dólar blue del día.' : 'Sin puntos. Ej.: 45000';
+  }
+  editor.addEventListener('change', e => { if (e.target.name === 'modo') modoPrecio(); });
+
+  function abrirEditor(o) {
+    editando = o || null;
+    fotoNueva = null;
+    editor.reset();
+    $('e-error').textContent = '';
+    $('e-titulo-dialogo').textContent = o ? 'Editar obra' : 'Nueva obra';
+    $('e-borrar').hidden = !o;
+    $('e-preview').src = o ? miniatura(o) : '';
+    $('e-preview').style.visibility = o ? '' : 'hidden';
+    $('e-foto').required = !o;
+    if (o) {
+      $('e-nombre').value = o.titulo;
+      $('e-tipo').value = o.tipo || '';
+      $('e-medidas').value = o.medidas || '';
+      $('e-categoria').value = o.categoria;
+      editor.modo.value = o.usd ? 'usd' : o.precio ? 'pesos' : o.consultar ? 'consultar' : 'ninguno';
+      $('e-monto').value = o.usd || o.precio || '';
+      editor.estado.value = o.estado || 'disponible';
+    }
+    modoPrecio();
+    dialogo.showModal();
+  }
+
+  $('nueva').addEventListener('click', () => abrirEditor(null));
+  $('e-cancelar').addEventListener('click', () => dialogo.close());
+  $('e-foto').addEventListener('change', e => {
+    fotoNueva = e.target.files[0] || null;
+    if (!fotoNueva) return;
+    $('e-preview').src = URL.createObjectURL(fotoNueva);
+    $('e-preview').style.visibility = '';
+  });
+
+  editor.addEventListener('submit', async e => {
+    e.preventDefault();
+    const titulo = texto($('e-nombre').value);
+    if (!titulo) return;
+    const modo = editor.modo.value, monto = Math.round(Number($('e-monto').value));
+    const datos = {
+      titulo,
+      tipo: texto($('e-tipo').value) || undefined,
+      medidas: texto($('e-medidas').value) || undefined,
+      categoria: $('e-categoria').value,
+      usd: modo === 'usd' ? monto : undefined,
+      precio: modo === 'pesos' ? monto : undefined,
+      consultar: modo === 'consultar' || undefined,
+      estado: editor.estado.value,
+    };
+    // Las fotos nuevas llevan un nombre nuevo, así nadie ve la vieja guardada en su navegador
+    let img = editando?.img;
+    if (fotoNueva) {
+      const usados = new Set(obras.map(o => o.img));
+      img = slug(titulo);
+      if (usados.has(img) || editando) img += '-' + Date.now().toString(36).slice(-4);
+    }
+    const obra = Object.fromEntries(Object.entries({ img, ...datos }).filter(([, v]) => v !== undefined));
+    const anterior = editando?.img;
+
+    const botones = editor.querySelectorAll('button');
+    botones.forEach(b => { b.disabled = true; });
+    $('e-error').textContent = fotoNueva ? 'Preparando la foto…' : 'Guardando…';
+    try {
+      const archivos = fotoNueva ? await prepararFoto(fotoNueva, img) : [];
+      if (fotoNueva) $('e-error').textContent = 'Subiendo…';
+      await guardarCambio(editando ? `Editar «${titulo}»` : `Agregar «${titulo}»`,
+        lista => editando
+          ? lista.map(o => o.img === anterior ? obra : o)
+          : [obra, ...lista],
+        archivos,
+        fotoNueva && anterior ? rutasFoto(anterior) : []);
+      if (fotoNueva) fotosLocales[img] = URL.createObjectURL(fotoNueva);
+      pintar();
+      dialogo.close();
+      toast(`«${titulo}» guardada. En 1 o 2 minutos se ve en la web.`);
+    } catch (err) {
+      $('e-error').textContent = 'No se pudo guardar: ' + err.message;
+    } finally {
+      botones.forEach(b => { b.disabled = false; });
+    }
+  });
+
+  $('e-borrar').addEventListener('click', async () => {
+    const o = editando;
+    if (!confirm(`¿Eliminar «${o.titulo}» de la web? Esto no se puede deshacer.\n\nSi se vendió, mejor marcala como "Vendida".`)) return;
+    const botones = editor.querySelectorAll('button');
+    botones.forEach(b => { b.disabled = true; });
+    $('e-error').textContent = 'Eliminando…';
+    try {
+      await guardarCambio(`Eliminar «${o.titulo}»`, lista => lista.filter(x => x.img !== o.img), [], rutasFoto(o.img));
+      dialogo.close();
+      toast(`«${o.titulo}» eliminada.`);
+    } catch (err) {
+      $('e-error').textContent = 'No se pudo eliminar: ' + err.message;
+    } finally {
+      botones.forEach(b => { b.disabled = false; });
+    }
+  });
+
+  // ---------- Ingreso ----------
+  let acceso = null;
+
+  async function entrar(tok) {
+    token = tok;
+    try { sessionStorage.setItem('token', tok); } catch {}
+    $('ingreso').hidden = $('config').hidden = true;
+    $('panel').hidden = false;
+    try {
+      const ref = await gh(`/git/ref/heads/${RAMA}`);
+      obras = await leerJSON(DATOS, ref.object.sha);
+      pintar();
+    } catch (err) {
+      $('cargando').textContent = 'No se pudieron cargar las obras: ' + err.message;
+    }
+  }
+
+  function salir() {
+    token = null;
+    try { sessionStorage.removeItem('token'); } catch {}
+    $('panel').hidden = true;
+    $('ingreso').hidden = false;
+    $('i-clave').value = '';
+  }
+  $('salir').addEventListener('click', salir);
+
+  $('ingreso').addEventListener('submit', async e => {
+    e.preventDefault();
+    const boton = e.target.querySelector('button');
+    boton.disabled = true;
+    $('i-error').textContent = '';
+    try {
+      const tok = await descifrar(acceso, $('i-usuario').value, $('i-clave').value);
+      try { localStorage.setItem('usuario', $('i-usuario').value.trim()); } catch {}
+      await entrar(tok);
+    } catch {
+      $('i-error').textContent = 'Usuario o contraseña incorrectos.';
+    } finally {
+      boton.disabled = false;
+    }
+  });
+
+  $('config').addEventListener('submit', async e => {
+    e.preventDefault();
+    const boton = e.target.querySelector('button');
+    const tok = $('c-token').value.trim();
+    boton.disabled = true;
+    $('c-error').textContent = 'Comprobando el token…';
+    try {
+      const repo = await gh('', {}, tok).catch(() => { throw new Error('El token no es válido o no tiene acceso al repositorio.'); });
+      if (!repo.permissions?.push) throw new Error('El token no tiene permiso para modificar el repositorio.');
+      const nuevo = await cifrar(tok, $('c-usuario').value, $('c-clave').value);
+      const actual = await gh(`/contents/${ACCESO}?ref=${RAMA}`, {}, tok).catch(() => null);
+      await gh(`/contents/${ACCESO}`, { method: 'PUT', body: {
+        message: 'Configurar el acceso al panel de obras',
+        content: b64(enc.encode(JSON.stringify(nuevo, null, 2) + '\n')),
+        branch: RAMA,
+        ...(actual ? { sha: actual.sha } : {}),
+      } }, tok);
+      acceso = nuevo;
+      $('c-error').textContent = '';
+      toast('Listo. Desde ahora se entra con usuario y contraseña.');
+      await entrar(tok);
+    } catch (err) {
+      $('c-error').textContent = err.message;
+    } finally {
+      boton.disabled = false;
+    }
+  });
+
+  // Arranque: con ?configurar se puede volver a configurar (por ejemplo, para cambiar la contraseña o el token)
+  (async () => {
+    try { $('i-usuario').value = localStorage.getItem('usuario') || ''; } catch {}
+    acceso = await fetch('acceso.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null);
+    if (!acceso || new URLSearchParams(location.search).has('configurar')) { $('config').hidden = false; return; }
+    let guardado = null;
+    try { guardado = sessionStorage.getItem('token'); } catch {}
+    if (guardado) entrar(guardado);
+    else { $('ingreso').hidden = false; ($('i-usuario').value ? $('i-clave') : $('i-usuario')).focus(); }
+  })();
+  </script>
+</body>
+</html>

@@ -10,6 +10,8 @@ index.html            Página principal
 404.html              Página de error
 assets/css/styles.css Estilos
 assets/js/main.js     Galería, filtros, carrito, formulario
+assets/data/obras.json Lista de obras (se edita desde el panel)
+admin/                Panel para manejar las obras
 assets/img/           Fotos optimizadas (WebP + JPEG)
 assets/icons/         Logo, favicon e íconos para celular (+ site.webmanifest)
 scripts/              Script para optimizar fotos
@@ -18,7 +20,28 @@ sitemap.xml           Mapa del sitio para buscadores
 llms.txt              Resumen del sitio para asistentes de IA
 ```
 
-## Cómo agregar una obra
+## Panel de obras
+
+En <https://carloscutini.com.ar/admin/> se manejan las obras sin tocar código:
+subir fotos, cambiar nombre, medidas y precio, marcarlas como **disponible**,
+**reservada** o **vendida**, cambiar el orden y eliminarlas. Las reservadas y
+vendidas se siguen viendo en la galería con un cartel, pero no se pueden pedir.
+
+Cada cambio se guarda como un commit en este repositorio y GitHub Pages lo
+publica en 1 o 2 minutos. Las fotos se achican en el navegador (600 y 1200 px,
+WebP + JPEG), igual que con `scripts/optimizar-foto.sh`.
+
+**Configuración (una sola vez).** La web no tiene servidor, así que el panel
+escribe en GitHub con un token. Creá un
+[token fine-grained](https://github.com/settings/personal-access-tokens/new)
+desde la cuenta dueña del repositorio, con acceso solo a este repositorio y el
+permiso *Contents: Read and write*. Entrá a `/admin/`, pegalo y elegí usuario
+y contraseña: el token se guarda en `admin/acceso.json` cifrado con ellos.
+Para cambiar la contraseña o el token, entrá a `/admin/?configurar`.
+
+## Cómo agregar una obra a mano
+
+También se puede hacer sin el panel:
 
 1. Optimizá la foto (necesita [ImageMagick](https://imagemagick.org)):
 
@@ -29,10 +52,10 @@ llms.txt              Resumen del sitio para asistentes de IA
    Esto crea `farol-nuevo-600.webp`, `farol-nuevo-1200.webp` y `farol-nuevo.jpg`
    en `assets/img/`.
 
-2. En `assets/js/main.js`, sumá una línea a la lista `OBRAS`:
+2. En `assets/data/obras.json`, sumá una línea:
 
-   ```js
-   { img: 'farol-nuevo', titulo: 'Farol nuevo', categoria: 'luminarias' },
+   ```json
+   {"img":"farol-nuevo","titulo":"Farol nuevo","categoria":"luminarias","estado":"disponible"},
    ```
 
    Categorías: `luminarias`, `decoracion`, `maquetas`, `taller`. Los filtros
@@ -40,8 +63,8 @@ llms.txt              Resumen del sitio para asistentes de IA
 
    Para venderla, sumale `usd` (precio en dólares):
 
-   ```js
-   { img: 'farol-nuevo', titulo: 'Mi Farol', tipo: 'Farol de latón', medidas: '30 cm', categoria: 'luminarias', usd: 150 },
+   ```json
+   {"img":"farol-nuevo","titulo":"Mi Farol","tipo":"Farol de latón","medidas":"30 cm","categoria":"luminarias","usd":150,"estado":"disponible"},
    ```
 
    `tipo` y `medidas` son opcionales: se muestran debajo del nombre, en el
@@ -100,7 +123,7 @@ va después de `/f/`.
 
 ## Ver el sitio en tu computadora
 
-Abrí `index.html` en el navegador, o levantá un servidor local:
+Levantá un servidor local (abrir `index.html` directo no carga las obras):
 
 ```sh
 npx serve .

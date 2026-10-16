@@ -28,8 +28,8 @@ const DOLAR_RESPALDO = 1550;
 // Los pesos se redondean hacia arriba a este múltiplo.
 const REDONDEO = 1000;
 
-// Obras: optimizá la foto con scripts/optimizar-foto.sh y sumá una línea por pieza.
-// img: nombre usado en el script (sin extensión)
+// Obras: se cargan desde assets/data/obras.json, que se edita desde el panel /admin/.
+// img: nombre de la foto en assets/img/ (sin extensión ni -600/-1200)
 // categoria: luminarias | decoracion | maquetas | taller
 // titulo: nombre de la obra en la web
 // tipo: qué es la pieza (se muestra debajo del nombre y lo leen los buscadores). Opcional.
@@ -37,23 +37,9 @@ const REDONDEO = 1000;
 // usd: precio en dólares; se muestra en pesos al dólar blue del día.
 // precio: precio fijo en pesos, sin puntos (solo si no tiene usd).
 // consultar: true muestra "Precio a consultar" y un botón que abre WhatsApp (para obras sin usd ni precio).
+// estado: disponible | reservado | vendido. Reservadas y vendidas se muestran con un cartel y no se pueden pedir.
 // Sin usd ni precio, la obra se muestra pero no se puede agregar al carrito.
-const OBRAS = [
-  { img: 'faro-cobre',                      titulo: 'Mi Guía',            tipo: 'Faro de cobre y latón',              medidas: '45 cm',      categoria: 'luminarias', usd: 150 },
-  { img: 'maqueta-velero-casco-verde',      titulo: 'Crucero cómodo',     tipo: 'Velero grande, casco verde',         medidas: '60 × 90 cm', categoria: 'maquetas',   usd: 250 },
-  { img: 'maqueta-velero-velas-azules',     titulo: 'Pistero',            tipo: 'Velero grande, velas azules',        medidas: '60 × 90 cm', categoria: 'maquetas',   usd: 250 },
-  { img: 'velero-velas-de-hilo',            titulo: 'Velas danzantes',    tipo: 'Velero grande con velas de hilo',    medidas: '60 × 90 cm', categoria: 'maquetas',   consultar: true },
-  { img: 'lampara-barco-mesa-de-luz',       titulo: 'Íntimo',             tipo: 'Velador velero con luz',             medidas: '20 × 20 cm', categoria: 'luminarias', usd: 120 },
-  { img: 'reloj-timon-rosa-de-los-vientos', titulo: 'Horas de timón',     tipo: 'Reloj octogonal con rueda de timón', medidas: '20 × 20 cm', categoria: 'decoracion', usd: 60 },
-  { img: 'lampara-moton',                   titulo: 'Mi Ambiente',        tipo: 'Lámpara de motón',                   medidas: '75 × 30 cm', categoria: 'luminarias', consultar: true },
-  { img: 'aplique-boya-roja',               titulo: 'Baliza',             tipo: 'Aplique boya roja y blanca',                                categoria: 'luminarias', usd: 70 },
-  { img: 'par-veleros-de-madera',           titulo: 'Simpáticos',         tipo: 'Velero chico de mesa, precio por unidad', medidas: '15 × 25 cm', categoria: 'maquetas',   usd: 25 },
-  { img: 'velero-chico-de-pie-tabla',       titulo: 'Simpático de pie',   tipo: 'Velero chico sobre tabla de madera', medidas: '20 × 30 cm', categoria: 'maquetas',   usd: 35 },
-  { img: 'porta-llaves-velero',             titulo: 'Esenciales',         tipo: 'Porta llaves velero',                medidas: '20 × 10 cm', categoria: 'decoracion', usd: 15 },
-  { img: 'porta-llaves-casco-de-barco',     titulo: 'Esenciales Premium', tipo: 'Porta llaves perfil 3D',             medidas: '20 × 16 cm', categoria: 'decoracion', usd: 30 },
-  { img: 'aplique-reloj-ojo-de-buey',       titulo: 'Aplique con reloj ojo de buey',                                                         categoria: 'luminarias', consultar: true },
-  { img: 'aplique-barometro',               titulo: 'Aplique con barómetro',                                                                 categoria: 'luminarias', consultar: true },
-];
+const OBRAS = await fetch('assets/data/obras.json').then(r => r.ok ? r.json() : []).catch(() => []);
 // =========================
 
 const NOMBRES = { luminarias: 'Luminarias', decoracion: 'Decoración', maquetas: 'Maquetas', taller: 'Taller' };
@@ -61,6 +47,9 @@ const FOTOS = 'assets/img/';
 const pesos = n => '$' + Math.round(n).toLocaleString('es-AR');
 // "Velero grande, casco verde · 60 × 90 cm"
 const detalle = o => [o.tipo, o.medidas].filter(Boolean).join(' · ');
+// Reservadas y vendidas se ven en la galería pero no se pueden pedir
+const ESTADOS = { reservado: 'Reservada', vendido: 'Vendida' };
+const disponible = o => !ESTADOS[o.estado];
 
 // Cotización: arranca con la última guardada (o la de respaldo) y se actualiza con la del día
 let dolar = { valor: DOLAR_RESPALDO, fecha: null };
@@ -81,12 +70,13 @@ grid.innerHTML = OBRAS.map(o => `
     <figcaption>
       <span>${NOMBRES[o.categoria]}</span><strong>${o.titulo}</strong>
       ${detalle(o) ? `<small class="obra-detalle">${detalle(o)}</small>` : ''}
-      ${o.precio ? `<em class="precio" data-precio="${o.img}">${pesos(o.precio)}</em>` : ''}
-      ${o.usd ? `<small class="precio-usd">USD ${o.usd.toLocaleString('es-AR')}</small>` : ''}
-      ${!o.precio && o.consultar ? '<em class="precio">Precio a consultar</em>' : ''}
+      ${!disponible(o) ? `<em class="estado estado-${o.estado}">${ESTADOS[o.estado]}</em>` : ''}
+      ${disponible(o) && o.precio ? `<em class="precio" data-precio="${o.img}">${pesos(o.precio)}</em>` : ''}
+      ${disponible(o) && o.usd ? `<small class="precio-usd">USD ${o.usd.toLocaleString('es-AR')}</small>` : ''}
+      ${disponible(o) && !o.precio && o.consultar ? '<em class="precio">Precio a consultar</em>' : ''}
     </figcaption>
-    ${o.precio ? `<button class="add" data-add="${o.img}" aria-label="Agregar ${o.titulo} al carrito">Agregar</button>` : ''}
-    ${!o.precio && o.consultar ? `<a class="add" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola Carlos! Quería consultar el precio de: ${o.titulo}${o.tipo ? ` (${o.tipo})` : ''}`)}" target="_blank" rel="noopener" aria-label="Consultar precio de ${o.titulo} por WhatsApp">Consultar</a>` : ''}
+    ${disponible(o) && o.precio ? `<button class="add" data-add="${o.img}" aria-label="Agregar ${o.titulo} al carrito">Agregar</button>` : ''}
+    ${disponible(o) && !o.precio && o.consultar ? `<a class="add" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola Carlos! Quería consultar el precio de: ${o.titulo}${o.tipo ? ` (${o.tipo})` : ''}`)}" target="_blank" rel="noopener" aria-label="Consultar precio de ${o.titulo} por WhatsApp">Consultar</a>` : ''}
   </figure>`).join('');
 
 // Datos para buscadores: las obras con precio se publican como productos (Google Shopping / resultados enriquecidos)
@@ -107,7 +97,7 @@ ld.textContent = JSON.stringify({
       url: `${SITIO}#obra`,
       price: o.usd || o.precio,
       priceCurrency: o.usd ? 'USD' : 'ARS',
-      availability: 'https://schema.org/InStock',
+      availability: `https://schema.org/${{ reservado: 'Reserved', vendido: 'SoldOut' }[o.estado] || 'InStock'}`,
       itemCondition: 'https://schema.org/NewCondition',
       seller: { '@id': `${SITIO}#marca` },
     },
@@ -251,7 +241,7 @@ document.getElementById('form').addEventListener('submit', async e => {
 // Se guarda en el navegador del visitante: [{ img, cant }]
 let carrito = [];
 try { carrito = JSON.parse(localStorage.getItem('carrito')) || []; } catch {}
-carrito = carrito.filter(i => OBRAS.some(o => o.img === i.img && o.precio));
+carrito = carrito.filter(i => OBRAS.some(o => o.img === i.img && o.precio && disponible(o)));
 
 const $ = id => document.getElementById(id);
 const cart = $('cart');
