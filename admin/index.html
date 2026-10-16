@@ -660,7 +660,9 @@
       toast('Listo. Desde ahora se entra con usuario y contraseña.');
       await entrar(tok);
     } catch (err) {
-      $('c-error').textContent = err.message;
+      $('c-error').textContent = err.status === 403
+        ? 'El token no tiene permiso para escribir. En GitHub, editá el token y poné "Contents" en "Read and write".'
+        : err.message;
     } finally {
       boton.disabled = false;
     }
